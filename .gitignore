@@ -68,3 +68,4 @@ detect/synopsys-detect-9.9.0.jar
 node_modules
 >>>>>>> 92a65020dc4611d11e220fe284531526d7d3b867
 coverity_results.json
+detect/synopsys-detect-9.10.1.jar
