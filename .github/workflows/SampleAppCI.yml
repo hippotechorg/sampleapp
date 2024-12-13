@@ -41,8 +41,8 @@ jobs:
         blackduck: true
         blackduck_url: ${{secrets.BLACKDUCK_SERVER_URL}}
         blackduck_token: ${{secrets.BLACKDUCK_ACCESS_TOKEN}}
-        blackduck_project: "lejouni/sampleapp" #${{github.repository}}
-        blackduck_version: "main" #${{github.ref_name}}
+        blackduck_project: ${{github.repository}}
+        blackduck_version: ${{github.ref_name}}
         blackduck_sarif: true
         blackduck_policies: true
         blackduck_iac: true
