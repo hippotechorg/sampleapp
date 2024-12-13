@@ -8,7 +8,7 @@
 	<name>sampleapp</name>
 	<!-- https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api -->
 	<properties>
-		<org.slf4j-version>1.7.13</org.slf4j-version>
+		<org.slf4j-version>1.7.33</org.slf4j-version>
 	</properties>
 	<dependencies>
 		<dependency>
