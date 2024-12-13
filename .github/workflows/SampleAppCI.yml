@@ -46,7 +46,7 @@ jobs:
         blackduck_sarif: true
         blackduck_policies: true
         blackduck_iac: true
-        blackduck_prComment_enabled: true
+        blackduck_prComment_enabled: false
         blackduck_rapid_compare_mode: BOM_COMPARE_STRICT
         blackduck_policy_categories: SECURITY,LICENSE
         #----------Coverity param------------#
