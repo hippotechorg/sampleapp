@@ -50,7 +50,7 @@ jobs:
         blackduck_rapid_compare_mode: BOM_COMPARE_STRICT
         blackduck_policy_categories: SECURITY,LICENSE
         #----------Coverity param------------#
-        coverity: false
+        coverity: true
         coverity_url: ${{secrets.COVERITY_SERVER_URL}}
         coverity_username: ${{secrets.COVERITY_USERNAME}}
         coverity_passphare: ${{secrets.COVERITY_ACCESS_TOKEN}}
