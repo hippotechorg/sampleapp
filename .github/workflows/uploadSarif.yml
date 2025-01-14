@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  upload-sarif-file:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3 # This will checkout the source codes from repository
