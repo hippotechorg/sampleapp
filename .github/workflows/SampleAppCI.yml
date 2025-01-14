@@ -7,7 +7,7 @@ on:
     types: [opened, reopened, closed]
 
 jobs:
-  build:
+  appsectests:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3 # This will checkout the source codes from repository
