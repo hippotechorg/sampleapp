@@ -1,4 +1,4 @@
-package com.example.main;
+package com.example;
 
 import java.util.Iterator;
 import java.util.Map;

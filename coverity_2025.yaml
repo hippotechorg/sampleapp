@@ -1,0 +1,85 @@
+# Coverity configuration file.
+# The schema is available here: <install-dir>/doc/configuration-schema.json
+# For help on individual settings:      coverity help config --setting <setting>
+# For a complete example configuration: coverity help config --show-all
+# For help on configuration syntax:     coverity help config --syntax
+
+capture:
+  build:
+    build-command: mvn install -Dmaven.test.skip=true
+    clean-command: mvn clean
+
+  compiler-configuration:
+    cov-configure:
+      - [ --java]
+      - [ --python]
+      - [ --template, --compiler, ccarm, --comptype, green_hills]
+      - [ --template, --compiler, ccintppc, --comptype, green_hills]
+      - [ --template, --compiler, ecomppc, --comptype, green_hills_ecom]
+      - [ --template, --compiler, icc430, --comptype, iar]
+      - [ --xml-option=skip_file:.*/boost/*.c, --gcc ]
+
+  files:
+    exclude-regex: "[^/]Test"
+  # Enables or disables security dynamic analysis. If set to true (the
+  # default), security dynamic analysis is run as part of the capture step. If
+  # set to false, security dynamic analysis is not run.
+  security-da: false
+
+analyze:
+  location: local
+  # Analysis mode: "pfi" (perfect fidelity incremental) for complete analysis;
+  # or "hfi" (high fidelity incremental) for analysis of only specific files
+  # specified by analyze.files settings, omitting any other files which may
+  # have been incidentally captured by the build. An "hfi" analysis can be
+  # faster but may produce results which are incomplete or inconsistent, due to
+  # the lack of context, and should be used only when speed is more important
+  # than accuracy.
+  # Valid values:
+  #   hfi
+  #   pfi
+  mode: pfi
+  checkers:
+    checker-config:
+      RESOURCE_LEAK:
+        enabled: true
+      HARDCODED_CREDENTIALS:
+        enabled: true
+    all: true
+    audit: true
+    all-security: true
+  cov-analyze-args:
+    - --disable-spotbugs
+    - --disable-sigma
+  # Specifies which files to analyze when the "analyze.mode" setting is "hfi".
+  # Analysis will be performed for only these files.
+  files:
+    exclude-regex: "[^/]Test"
+
+# Specifies where the analysis results should be sent.
+commit:
+  # Coverity Connect configuration to use when committing defects to Coverity
+  # Connect.
+  connect:
+    cov-commit-defects-args:
+      - --exclude-files
+      - "[^/]Test"
+    on-new-cert: trust
+
+    # The name of the stream to commit the results to.
+    stream: sampleapp-feature
+
+    snapshot:
+      reference: latest
+
+    # Absolute URL of where to commit the Coverity Connect results.
+    url: https://demo.coverity.synopsys.com:443
+
+    comparison-only: true
+  local:
+    format: html # options: html/json
+    # path must be file when format is json. 
+    # example: comparison_report.json and folder when format is html.
+    path: comparison_report 
+caching:
+  enabled: false

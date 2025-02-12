@@ -1,0 +1,1366 @@
+# Coverity configuration file.
+# The schema is available here: <install-dir>/doc/configuration-schema.json
+# For help on individual settings:      coverity help config --setting <setting>
+# For a complete example configuration: coverity help config --show-all
+# For help on configuration syntax:     coverity help config --syntax
+
+# Specifies the version of the configuration file in use.
+##version: 1
+
+# Specifies how the project should be captured.
+capture:
+
+  # Specifies that build capture should be used to capture the project and
+  # provides the build configuration to use. If not specified and the project
+  # directory contains compiled source files then automatic build capture will
+  # be used to capture compiled source files in the project directory.
+  build:
+
+    # Specifies whether to enable or disable the automatic invocation of
+    # Aspnet_compiler.exe for any ASP.NET 4 and earlier Web applications that
+    # are detected in the build. The output of Aspnet_compiler.exe is required
+    # by the C# and Visual Basic security checkers.
+    ##aspnet-compiler: true
+
+    # Specifies whether to enable Bazel capture.
+    ##bazel: false
+
+    # The build command will be invoked to use build capture to capture the
+    # project. A build command specified on the command-line will override this
+    # setting.
+    ##build-command: <value>
+
+    # The clean command will be invoked prior to doing build capture to capture
+    # the project.
+    ##clean-command: <value>
+
+    # Additional arguments to pass to cov-build when doing build capture.
+    ##cov-build-args:
+    ##- <value>
+
+    # Specifies whether the build should only record the decompilations of byte
+    # code during the build and not attempt to decompile and emit the byte
+    # code. During the analysis phase, cov-build will be rerun with
+    # --replay-decomp to decompile and emit the byte code.
+    ##defer-decomp: false
+
+    # Specifies whether to use the instrumentation mode instead of the
+    # debugger. For certain builds, this configuration can significantly
+    # improve build times. This setting is applicable only on Windows.
+    ##instrument: false
+
+    # Specifies how to parallelize translation of C and C++ code.
+    parallel-translate:
+
+      # Specifies whether cov-translate parallelization should be enabled.
+      ##enabled: <value>
+
+      # Specifies the number of cov-emit processes to be run in parallel by
+      # cov-translate when multiple files are seen on a single native compiler
+      # invocation. A value of 0 will use the number of logical processors in
+      # the machine.
+      ##processes: <value>
+
+    # Specifies whether to enable the collection of scan transparency data for
+    # build capture. This setting must be enabled if the Coverity Connect
+    # instance has 'scan.transparency.enabled=true' in its configuration.
+    ##scan-transparency: true
+
+  # Specifies whether to enable or disable build command inference. If build
+  # command inference is disabled and no build command is provided then no
+  # attempt at build capture will be made.
+  ##build-command-inference: true
+
+  # Specifies which compilers to configure. By default, template compilers are
+  # configured.
+  compiler-configuration:
+
+    # Specifies a pre-generated compiler configuration file to use. This key is
+    # mutually exclusive with the "cov-configure" key.
+    ##file: <value>
+
+    # Specifies a list of arguments to pass to "cov-configure" to generate the
+    # compiler configuration to use during capture. This key is mutually
+    # exclusive with the "file" key.
+    ##cov-configure:
+    ##- - <value>
+
+  # Command to invoke that will invoke "cov-translate" to capture the project.
+  cov-translate:
+
+    # This key specifies a command to invoke that will invoke "cov-translate"
+    # in the case where the user is doing a "cov-translate" capture.
+    ##command: <value>
+
+    # Additional arguments to pass to cov-build when invoking the provided
+    # command.
+    ##cov-build-args:
+    ##- <value>
+
+    # Specifies whether the build should only record the decompilations of byte
+    # code during the build and not attempt to decompile and emit the byte
+    # code. During the analysis phase, cov-build will be rerun with
+    # --replay-decomp to decompile and emit the byte code.
+    ##defer-decomp: false
+
+    # Specifies how to parallelize translation of C and C++ code.
+    parallel-translate:
+
+      # Specifies whether cov-translate parallelization should be enabled.
+      ##enabled: <value>
+
+      # Specifies the number of cov-emit processes to be run in parallel by
+      # cov-translate when multiple files are seen on a single native compiler
+      # invocation. A value of 0 will use the number of logical processors in
+      # the machine.
+      ##processes: <value>
+
+    # Specifies whether to enable the collection of scan transparency data for
+    # cov-translate capture. This setting must be enabled if the Coverity
+    # Connect instance has 'scan.transparency.enabled=true' in its
+    # configuration.
+    ##scan-transparency: true
+
+  # Records additional information during the emit process needed for the
+  # compliance checkers. If a "coding-standards" configuration is present then
+  # this flag will automatically be set to true.
+  ##emit-complementary-info: false
+
+  # Specifies the encoding to use when parsing and emitting the source files.
+  ##encoding: US-ASCII
+
+  # Specifies the minimum percentage of files that must be captured in order to
+  # proceed with the analysis.
+  ##failure-threshold-percent: 0.0
+
+  # Specifies which non-compiled files to capture. By default, all files are
+  # captured.
+  files:
+
+    # Glob pattern that specifies the set of source files to exclude from
+    # capture. Note that any include glob patterns and regular expressions are
+    # processed prior to handling exclude glob patterns and regular
+    # expressions.
+    ##exclude-glob: <value>
+
+    # Regular expression that specifies the set of source files to exclude from
+    # capture. Note that any include glob patterns and regular expressions are
+    # processed prior to handling exclude glob patterns and regular
+    # expressions.
+    ##exclude-regex: <value>
+
+    # List of directory basenames to include for capture, which would normally
+    # have been excluded. By default, directories named "vendor" or
+    # "node_modules" are excluded, as are directories whose names begin with
+    # "."
+    ##include-dirs:
+    ##- <value>
+
+    # Glob pattern that specifies the set of source files to capture.
+    ##include-glob: <value>
+
+    # Regular expression that specifies the set of source files to capture.
+    ##include-regex: <value>
+
+    # List of directories to look in for dependencies to use during capture.
+    ##library-dirs:
+    ##- <value>
+
+    # List of file dependencies to use during capture.
+    ##library-files:
+    ##- <value>
+
+    # Specifies information about which web-application archives should be
+    # captured. By default all webapp archives are captured.
+    ##webapp-archives:
+
+    ##- # Specifies the path to the web application archive file or path to the
+      # directory containing the exploded web application.
+      ##path: <value>
+
+      # Indicates whether the web-app should be checked to see if it is valid
+      # during capture. The validation check checks that there is a
+      # "/WEB-INF/web.xml" file and that > 20% of classes for the web
+      # application were captured.
+      ##validate-webapp: true
+
+  # Force resolution of Maven, Gradle and MSBuild dependencies even if this is
+  # not needed based on the detected source languages in the project.
+  ##force-dependency-resolution: false
+
+  # Specifies how to import data about source file changes from the source
+  # control management system.
+  import-scm:
+
+    # Additional arguments to pass to cov-import-scm following capture.
+    ##cov-import-scm-args:
+    ##- <value>
+
+    # Regular expression that specifies the set of files for which to import
+    # change information.
+    ##filename-regex: <value>
+
+    # Delay in milliseconds between calls to the underlying SCM.
+    ##ms-delay: <value>
+
+    # The name of the source control management system.
+    ##scm: <value>
+
+  # Specifies which languages to include or exclude for capture. By default,
+  # all languages are captured.
+  languages:
+
+    # Specifies the languages for which the source code should be included in
+    # the capture. This key is mutually exclusive with the "exclude" key.
+    # Valid values:
+    #   apex
+    #   c-family
+    #   csharp
+    #   dart
+    #   go
+    #   java
+    #   javascript
+    #   kotlin
+    #   php
+    #   python
+    #   ruby
+    #   swift
+    #   vb
+    #   configuration
+    ##include:
+    ##- apex
+
+    # Specifies the languages for which the source code should be excluded in
+    # the capture. This key is mutually exclusive with the "include" key.
+    # Valid values:
+    #   apex
+    #   c-family
+    #   csharp
+    #   dart
+    #   go
+    #   java
+    #   javascript
+    #   kotlin
+    #   php
+    #   python
+    #   ruby
+    #   swift
+    #   vb
+    #   configuration
+    ##exclude:
+    ##- apex
+
+  # Specifies whether to limit the group of emitted JAR files to those needed
+  # for compilation of the Java files. The default behavior without this option
+  # is to emit all the JAR files in the classpath regardless of whether they
+  # are referenced by a Java file in the compilation.
+  ##minimal-classpath-emit: false
+
+  # Specifies whether to do a complete capture or a record with source capture.
+  ##record-with-source: false
+
+  # Enables or disables security dynamic analysis. If set to true (the
+  # default), security dynamic analysis is run as part of the capture step. If
+  # set to false, security dynamic analysis is not run.
+  ##security-da: true
+
+# Specifies how the project should be analyzed.
+analyze:
+
+  # Specifies the aggressiveness level for the analysis. The aggressiveness
+  # level causes the analysis to make more or less aggressive assumptions
+  # during the analysis where the higher the aggressiveness level the more
+  # defects are reported.
+  # Valid values:
+  #   low
+  #   medium
+  #   high
+  ##aggressiveness-level: low
+
+  # Enables callgraph metrics output in the intermediate directory.
+  ##callgraph-metrics: false
+
+  # Enables analysis of calls to function pointers for defects.
+  ##c-cpp-fnptr: false
+
+  # Enables full virtual-call resolution for C++.
+  ##c-cpp-virtual: false
+
+  # If no checker configuration is specified, the CLI will enable a set of
+  # checkers based on the files that were captured.
+  checkers:
+
+    # Indicates whether all checkers should be enabled.
+    ##all: false
+
+    # Indicates whether all security checkers should be enabled. This includes
+    # the Security, Android Security, and Web App Security categories, and
+    # other security checkers that require explicit enablement.
+    ##all-security: false
+
+    # If set to true, enables android security checkers.
+    ##android-security: true
+
+    # Enables audit checkers.
+    ##audit: false
+
+    # Indicates whether the brakeman checkers should be enabled or disabled.
+    ##brakeman: true
+
+    # Enables C, C++, Objective-C, Objective-C++ security-related checkers that
+    # are disabled by default.
+    ##c-family-security: false
+
+    # Map from checker name to configuration for the checker.
+    # The configuration indicates whether the checker should be enabled or not
+    # and allows users to set options used to configure the checker.
+    checker-config:
+      ##<name>:
+
+        # Indicates whether this checker should be enabled or not.
+        ##enabled: true
+
+        # Options to set for each checker. The map key is the name of the
+        # checker option and the string value is the setting to use for the
+        # option.
+        ##options:
+          ##<name>: <value>
+
+    # Specifies CodeXM (.cxm) files to use in the analysis.
+    ##codexm:
+    ##- <value>
+
+    # Enables C, C++ concurrency checkers that are disabled by default.
+    ##concurrency: false
+
+    # Specifies whether to enable the default set of checkers. If set to true,
+    # the default set of checkers is enabled. Set to false to get more control
+    # over which checkers are enabled.
+    ##default: true
+
+    # Enables or disables PMD for Apex analysis.
+    ##pmd: true
+
+    # Enables C, C++ rule checkers.
+    ##rule: false
+
+    # Specifies how web application security analysis should be done.
+    webapp-security:
+
+      # Enables the checkers that are used for web application security
+      # analysis.
+      ##enabled: true
+
+      # Sets the web application checkers aggressiveness level.
+      # Valid values:
+      #   low
+      #   medium
+      #   high
+      ##aggressiveness-level: low
+
+  # If specified, the analysis will scan the code for compliance according to
+  # the given coding standard configuration. If this configuration is present,
+  # the capture "emit-complementary-info" flag will be set to true.
+  coding-standards:
+
+    # If set to true, any defects found in code annotated using the #pragma
+    # Coverity compliance directive will not be reported in Coverity Connect.
+    # Information about the defects that were suppressed can then be found in
+    # two files: deviations.txt deviations-warnings.txt
+    ##ignore-deviated-findings: false
+
+    # Enables AUTOSAR code compliance checking according to the given
+    # configuration.
+    autosarcpp14:
+
+      # This key specifies the name of a "pre-canned" coding standard
+      # configuration to use. The available pre-canned coding standard
+      # configurations depend on the coding standard in question. Refer to
+      # Coverity's documentation for details on the "pre-canned"
+      # configurations.
+      # Valid values:
+      #   all
+      #   all-deviations
+      #   advisory-only
+      #   required-only
+      ##pre-canned: all
+
+      # This key specifies the coding standard configuration for the given
+      # coding standard. The actual type of this key is specific to the
+      # particular coding standard. This key is mutually exclusive with the
+      # "file" key. A temporary configuration file will be generated containing
+      # the in-line configuration and then passed to "cov-analyze" using the
+      # "--coding-standard-config <config_file>" option.
+      config:
+
+        # Version of this code compliance configuration.
+        ##version: "2.0"
+
+        # Name of this code compliance configuration.
+        ##title: <value>
+
+        # List of deviations for this standard.
+        ##deviations:
+
+        ##- # The name of the rule to deviate from.
+          ##deviation: <value>
+
+          # The reason that the rule is being deviated from.
+          ##reason: <value>
+
+      # This specifies the filename containing the configuration to use for the
+      # corresponding coding standard. This key is mutually exclusive with the
+      # "config" key.
+      ##file: <value>
+
+    # Enables CERT-C code compliance checking according to the given
+    # configuration.
+    cert-c:
+
+      # This key specifies the name of a "pre-canned" coding standard
+      # configuration to use. The available pre-canned coding standard
+      # configurations depend on the coding standard in question. Refer to
+      # Coverity's documentation for details on the "pre-canned"
+      # configurations.
+      # Valid values:
+      #   all
+      #   all-deviations
+      #   L1-only
+      #   L2-only
+      #   L3-only
+      #   L1-L2
+      #   L1-L3
+      #   L2-L3
+      ##pre-canned: all
+
+      # This key specifies the coding standard configuration for the given
+      # coding standard. The actual type of this key is specific to the
+      # particular coding standard. This key is mutually exclusive with the
+      # "file" key. A temporary configuration file will be generated containing
+      # the in-line configuration and then passed to "cov-analyze" using the
+      # "--coding-standard-config <config_file>" option.
+      config:
+
+        # Version of this code compliance configuration.
+        ##version: "2.0"
+
+        # Name of this code compliance configuration.
+        ##title: <value>
+
+        # List of deviations for this standard.
+        ##deviations:
+
+        ##- # The name of the rule to deviate from.
+          ##deviation: <value>
+
+          # The reason that the rule is being deviated from.
+          ##reason: <value>
+
+      # This specifies the filename containing the configuration to use for the
+      # corresponding coding standard. This key is mutually exclusive with the
+      # "config" key.
+      ##file: <value>
+
+    # Enables CERT-C Recommendation code compliance checking according to the
+    # given configuration.
+    cert-c-recommendation:
+
+      # This key specifies the name of a "pre-canned" coding standard
+      # configuration to use. The available pre-canned coding standard
+      # configurations depend on the coding standard in question. Refer to
+      # Coverity's documentation for details on the "pre-canned"
+      # configurations.
+      # Valid values:
+      #   all
+      #   all-deviations
+      ##pre-canned: all
+
+      # This key specifies the coding standard configuration for the given
+      # coding standard. The actual type of this key is specific to the
+      # particular coding standard. This key is mutually exclusive with the
+      # "file" key. A temporary configuration file will be generated containing
+      # the in-line configuration and then passed to "cov-analyze" using the
+      # "--coding-standard-config <config_file>" option.
+      config:
+
+        # Version of this code compliance configuration.
+        ##version: "2.0"
+
+        # Name of this code compliance configuration.
+        ##title: <value>
+
+        # List of deviations for this standard.
+        ##deviations:
+
+        ##- # The name of the rule to deviate from.
+          ##deviation: <value>
+
+          # The reason that the rule is being deviated from.
+          ##reason: <value>
+
+      # This specifies the filename containing the configuration to use for the
+      # corresponding coding standard. This key is mutually exclusive with the
+      # "config" key.
+      ##file: <value>
+
+    # Enables CERT-CPP code compliance checking according to the given
+    # configuration.
+    cert-cpp:
+
+      # This key specifies the name of a "pre-canned" coding standard
+      # configuration to use. The available pre-canned coding standard
+      # configurations depend on the coding standard in question. Refer to
+      # Coverity's documentation for details on the "pre-canned"
+      # configurations.
+      # Valid values:
+      #   all
+      #   all-deviations
+      #   L1-only
+      #   L2-only
+      #   L3-only
+      #   L2-L1
+      #   L2-L3
+      #   L3-L1
+      ##pre-canned: all
+
+      # This key specifies the coding standard configuration for the given
+      # coding standard. The actual type of this key is specific to the
+      # particular coding standard. This key is mutually exclusive with the
+      # "file" key. A temporary configuration file will be generated containing
+      # the in-line configuration and then passed to "cov-analyze" using the
+      # "--coding-standard-config <config_file>" option.
+      config:
+
+        # Version of this code compliance configuration.
+        ##version: "2.0"
+
+        # Name of this code compliance configuration.
+        ##title: <value>
+
+        # List of deviations for this standard.
+        ##deviations:
+
+        ##- # The name of the rule to deviate from.
+          ##deviation: <value>
+
+          # The reason that the rule is being deviated from.
+          ##reason: <value>
+
+      # This specifies the filename containing the configuration to use for the
+      # corresponding coding standard. This key is mutually exclusive with the
+      # "config" key.
+      ##file: <value>
+
+    # Enables CERT-Java code compliance checking according to the given
+    # configuration.
+    cert-java:
+
+      # This key specifies the name of a "pre-canned" coding standard
+      # configuration to use. The available pre-canned coding standard
+      # configurations depend on the coding standard in question. Refer to
+      # Coverity's documentation for details on the "pre-canned"
+      # configurations.
+      # Valid values:
+      #   all
+      #   all-deviations
+      ##pre-canned: all
+
+      # This key specifies the coding standard configuration for the given
+      # coding standard. The actual type of this key is specific to the
+      # particular coding standard. This key is mutually exclusive with the
+      # "file" key. A temporary configuration file will be generated containing
+      # the in-line configuration and then passed to "cov-analyze" using the
+      # "--coding-standard-config <config_file>" option.
+      config:
+
+        # Version of this code compliance configuration.
+        ##version: "2.0"
+
+        # Name of this code compliance configuration.
+        ##title: <value>
+
+        # List of deviations for this standard.
+        ##deviations:
+
+        ##- # The name of the rule to deviate from.
+          ##deviation: <value>
+
+          # The reason that the rule is being deviated from.
+          ##reason: <value>
+
+      # This specifies the filename containing the configuration to use for the
+      # corresponding coding standard. This key is mutually exclusive with the
+      # "config" key.
+      ##file: <value>
+
+    # Enables HYUNDAI-C code compliance checking according to the given
+    # configuration.
+    hyundai-c:
+
+      # This key specifies the name of a "pre-canned" coding standard
+      # configuration to use. The available pre-canned coding standard
+      # configurations depend on the coding standard in question. Refer to
+      # Coverity's documentation for details on the "pre-canned"
+      # configurations.
+      # Valid values:
+      #   all
+      #   all-deviations
+      ##pre-canned: all
+
+      # This key specifies the coding standard configuration for the given
+      # coding standard. The actual type of this key is specific to the
+      # particular coding standard. This key is mutually exclusive with the
+      # "file" key. A temporary configuration file will be generated containing
+      # the in-line configuration and then passed to "cov-analyze" using the
+      # "--coding-standard-config <config_file>" option.
+      config:
+
+        # Version of this code compliance configuration.
+        ##version: "2.0"
+
+        # Name of this code compliance configuration.
+        ##title: <value>
+
+        # List of deviations for this standard.
+        ##deviations:
+
+        ##- # The name of the rule to deviate from.
+          ##deviation: <value>
+
+          # The reason that the rule is being deviated from.
+          ##reason: <value>
+
+      # This specifies the filename containing the configuration to use for the
+      # corresponding coding standard. This key is mutually exclusive with the
+      # "config" key.
+      ##file: <value>
+
+    # Enables HYUNDAI-CPP code compliance checking according to the given
+    # configuration.
+    hyundai-cpp:
+
+      # This key specifies the name of a "pre-canned" coding standard
+      # configuration to use. The available pre-canned coding standard
+      # configurations depend on the coding standard in question. Refer to
+      # Coverity's documentation for details on the "pre-canned"
+      # configurations.
+      # Valid values:
+      #   all
+      #   all-deviations
+      ##pre-canned: all
+
+      # This key specifies the coding standard configuration for the given
+      # coding standard. The actual type of this key is specific to the
+      # particular coding standard. This key is mutually exclusive with the
+      # "file" key. A temporary configuration file will be generated containing
+      # the in-line configuration and then passed to "cov-analyze" using the
+      # "--coding-standard-config <config_file>" option.
+      config:
+
+        # Version of this code compliance configuration.
+        ##version: "2.0"
+
+        # Name of this code compliance configuration.
+        ##title: <value>
+
+        # List of deviations for this standard.
+        ##deviations:
+
+        ##- # The name of the rule to deviate from.
+          ##deviation: <value>
+
+          # The reason that the rule is being deviated from.
+          ##reason: <value>
+
+      # This specifies the filename containing the configuration to use for the
+      # corresponding coding standard. This key is mutually exclusive with the
+      # "config" key.
+      ##file: <value>
+
+    # Enables HYUNDAI-Java code compliance checking according to the given
+    # configuration.
+    hyundai-java:
+
+      # This key specifies the name of a "pre-canned" coding standard
+      # configuration to use. The available pre-canned coding standard
+      # configurations depend on the coding standard in question. Refer to
+      # Coverity's documentation for details on the "pre-canned"
+      # configurations.
+      # Valid values:
+      #   all
+      #   all-deviations
+      ##pre-canned: all
+
+      # This key specifies the coding standard configuration for the given
+      # coding standard. The actual type of this key is specific to the
+      # particular coding standard. This key is mutually exclusive with the
+      # "file" key. A temporary configuration file will be generated containing
+      # the in-line configuration and then passed to "cov-analyze" using the
+      # "--coding-standard-config <config_file>" option.
+      config:
+
+        # Version of this code compliance configuration.
+        ##version: "2.0"
+
+        # Name of this code compliance configuration.
+        ##title: <value>
+
+        # List of deviations for this standard.
+        ##deviations:
+
+        ##- # The name of the rule to deviate from.
+          ##deviation: <value>
+
+          # The reason that the rule is being deviated from.
+          ##reason: <value>
+
+      # This specifies the filename containing the configuration to use for the
+      # corresponding coding standard. This key is mutually exclusive with the
+      # "config" key.
+      ##file: <value>
+
+    # Enables ISO TS 17961 code compliance checking according to the given
+    # configuration.
+    iso-ts17961:
+
+      # This key specifies the name of a "pre-canned" coding standard
+      # configuration to use. The available pre-canned coding standard
+      # configurations depend on the coding standard in question. Refer to
+      # Coverity's documentation for details on the "pre-canned"
+      # configurations.
+      # Valid values:
+      #   all
+      #   all-deviations
+      ##pre-canned: all
+
+      # This key specifies the coding standard configuration for the given
+      # coding standard. The actual type of this key is specific to the
+      # particular coding standard. This key is mutually exclusive with the
+      # "file" key. A temporary configuration file will be generated containing
+      # the in-line configuration and then passed to "cov-analyze" using the
+      # "--coding-standard-config <config_file>" option.
+      config:
+
+        # Version of this code compliance configuration.
+        ##version: "2.0"
+
+        # Name of this code compliance configuration.
+        ##title: <value>
+
+        # List of deviations for this standard.
+        ##deviations:
+
+        ##- # The name of the rule to deviate from.
+          ##deviation: <value>
+
+          # The reason that the rule is being deviated from.
+          ##reason: <value>
+
+      # This specifies the filename containing the configuration to use for the
+      # corresponding coding standard. This key is mutually exclusive with the
+      # "config" key.
+      ##file: <value>
+
+    # Enables MISRA C 2004 code compliance checking according to the given
+    # configuration.
+    misrac2004:
+
+      # This key specifies the name of a "pre-canned" coding standard
+      # configuration to use. The available pre-canned coding standard
+      # configurations depend on the coding standard in question. Refer to
+      # Coverity's documentation for details on the "pre-canned"
+      # configurations.
+      # Valid values:
+      #   all
+      #   all-deviations
+      #   advisory-only
+      #   required-only
+      ##pre-canned: all
+
+      # This key specifies the coding standard configuration for the given
+      # coding standard. The actual type of this key is specific to the
+      # particular coding standard. This key is mutually exclusive with the
+      # "file" key. A temporary configuration file will be generated containing
+      # the in-line configuration and then passed to "cov-analyze" using the
+      # "--coding-standard-config <config_file>" option.
+      config:
+
+        # Version of this code compliance configuration.
+        ##version: "2.0"
+
+        # Name of this code compliance configuration.
+        ##title: <value>
+
+        # List of deviations for this standard.
+        ##deviations:
+
+        ##- # The name of the rule to deviate from.
+          ##deviation: <value>
+
+          # The reason that the rule is being deviated from.
+          ##reason: <value>
+
+      # This specifies the filename containing the configuration to use for the
+      # corresponding coding standard. This key is mutually exclusive with the
+      # "config" key.
+      ##file: <value>
+
+    # Enables MISRA C 2012 code compliance checking according to the given
+    # configuration.
+    misrac2012:
+
+      # This key specifies the name of a "pre-canned" coding standard
+      # configuration to use. The available pre-canned coding standard
+      # configurations depend on the coding standard in question. Refer to
+      # Coverity's documentation for details on the "pre-canned"
+      # configurations.
+      # Valid values:
+      #   all
+      #   all-deviations
+      #   advisory-only
+      #   mandatory-advisory
+      #   mandatory-only
+      #   mandatory-required
+      #   required-advisory
+      #   required-only
+      ##pre-canned: all
+
+      # This key specifies the coding standard configuration for the given
+      # coding standard. The actual type of this key is specific to the
+      # particular coding standard. This key is mutually exclusive with the
+      # "file" key. A temporary configuration file will be generated containing
+      # the in-line configuration and then passed to "cov-analyze" using the
+      # "--coding-standard-config <config_file>" option.
+      config:
+
+        # Version of this code compliance configuration.
+        ##version: "2.0"
+
+        # Name of this code compliance configuration.
+        ##title: <value>
+
+        # List of deviations for this standard.
+        ##deviations:
+
+        ##- # The name of the rule to deviate from.
+          ##deviation: <value>
+
+          # The reason that the rule is being deviated from.
+          ##reason: <value>
+
+      # This specifies the filename containing the configuration to use for the
+      # corresponding coding standard. This key is mutually exclusive with the
+      # "config" key.
+      ##file: <value>
+
+    # Enables MISRA C 2023 code compliance checking according to the given
+    # configuration.
+    misrac2023:
+
+      # This key specifies the name of a "pre-canned" coding standard
+      # configuration to use. The available pre-canned coding standard
+      # configurations depend on the coding standard in question. Refer to
+      # Coverity's documentation for details on the "pre-canned"
+      # configurations.
+      # Valid values:
+      #   all
+      #   all-deviations
+      #   mandatory-only
+      #   mandatory-required
+      ##pre-canned: all
+
+      # This key specifies the coding standard configuration for the given
+      # coding standard. The actual type of this key is specific to the
+      # particular coding standard. This key is mutually exclusive with the
+      # "file" key. A temporary configuration file will be generated containing
+      # the in-line configuration and then passed to "cov-analyze" using the
+      # "--coding-standard-config <config_file>" option.
+      config:
+
+        # Version of this code compliance configuration.
+        ##version: "2.0"
+
+        # Name of this code compliance configuration.
+        ##title: <value>
+
+        # List of deviations for this standard.
+        ##deviations:
+
+        ##- # The name of the rule to deviate from.
+          ##deviation: <value>
+
+          # The reason that the rule is being deviated from.
+          ##reason: <value>
+
+      # This specifies the filename containing the configuration to use for the
+      # corresponding coding standard. This key is mutually exclusive with the
+      # "config" key.
+      ##file: <value>
+
+    # Enables MISRA C++ 2008 code compliance checking according to the given
+    # configuration.
+    misracpp2008:
+
+      # This key specifies the name of a "pre-canned" coding standard
+      # configuration to use. The available pre-canned coding standard
+      # configurations depend on the coding standard in question. Refer to
+      # Coverity's documentation for details on the "pre-canned"
+      # configurations.
+      # Valid values:
+      #   all
+      #   all-deviations
+      #   advisory-only
+      #   required-only
+      ##pre-canned: all
+
+      # This key specifies the coding standard configuration for the given
+      # coding standard. The actual type of this key is specific to the
+      # particular coding standard. This key is mutually exclusive with the
+      # "file" key. A temporary configuration file will be generated containing
+      # the in-line configuration and then passed to "cov-analyze" using the
+      # "--coding-standard-config <config_file>" option.
+      config:
+
+        # Version of this code compliance configuration.
+        ##version: "2.0"
+
+        # Name of this code compliance configuration.
+        ##title: <value>
+
+        # List of deviations for this standard.
+        ##deviations:
+
+        ##- # The name of the rule to deviate from.
+          ##deviation: <value>
+
+          # The reason that the rule is being deviated from.
+          ##reason: <value>
+
+      # This specifies the filename containing the configuration to use for the
+      # corresponding coding standard. This key is mutually exclusive with the
+      # "config" key.
+      ##file: <value>
+
+    # Enables MISRA C++ 2023 code compliance checking according to the given
+    # configuration.
+    misracpp2023:
+
+      # This key specifies the name of a "pre-canned" coding standard
+      # configuration to use. The available pre-canned coding standard
+      # configurations depend on the coding standard in question. Refer to
+      # Coverity's documentation for details on the "pre-canned"
+      # configurations.
+      # Valid values:
+      #   all
+      #   all-deviations
+      #   mandatory-only
+      #   mandatory-required
+      ##pre-canned: all
+
+      # This key specifies the coding standard configuration for the given
+      # coding standard. The actual type of this key is specific to the
+      # particular coding standard. This key is mutually exclusive with the
+      # "file" key. A temporary configuration file will be generated containing
+      # the in-line configuration and then passed to "cov-analyze" using the
+      # "--coding-standard-config <config_file>" option.
+      config:
+
+        # Version of this code compliance configuration.
+        ##version: "2.0"
+
+        # Name of this code compliance configuration.
+        ##title: <value>
+
+        # List of deviations for this standard.
+        ##deviations:
+
+        ##- # The name of the rule to deviate from.
+          ##deviation: <value>
+
+          # The reason that the rule is being deviated from.
+          ##reason: <value>
+
+      # This specifies the filename containing the configuration to use for the
+      # corresponding coding standard. This key is mutually exclusive with the
+      # "config" key.
+      ##file: <value>
+
+  # Coverity Connect configuration to use when performing analysis in Coverity
+  # Connect.
+  connect:
+
+    # The authentication key file to use when authenticating to Coverity
+    # Connect to perform analysis. By default, the file located at
+    # $HOME/.coverity/ak-<hostname>-<port> is used.
+    ##auth-key-file: <value>
+
+    # File containing additional certificates to trust in addition to the ones
+    # in the system certificate store and the Coverity TFT store. By default
+    # system CA certificates are used.
+    ##ca-certs-file: <value>
+
+    # File containing the client certificate in PEM format, that should be
+    # presented to the proxy when making a request.
+    ##proxy-client-cert-file: <value>
+
+    # File containing the client certificate private key in PEM format, for the
+    # proxy-client-cert-file.
+    ##proxy-client-key-file: <value>
+
+    # URL for a forward proxy to use when communicating with Coverity Connect.
+    # Must be an https URL.
+    ##proxy-url: <value>
+
+    # Artifacts to upload following analysis.
+    # Valid values:
+    #   All
+    #   LogsOnly
+    #   None
+    #   OnFailure
+    ##upload-artifacts: All
+
+    # Absolute URL of where to perform Coverity Connect analysis.
+    ##url: <value>
+
+  # Enables additional filtering of defects by using an additional false-path
+  # pruner. If set to true, the constraint FPP is enabled.
+  ##constraint-fpp: false
+
+  # Additional arguments to pass to cov-analyze when doing analysis.
+  ##cov-analyze-args:
+  ##- <value>
+
+  # Specifies directives to use for the analysis, including for web application
+  # security analysis.
+  ##directives:
+
+  ##- # File containing security directives to use during the analysis. This
+    # key is mutually exclusive with the "config" key.
+    ##file: <value>
+
+    # Security directives configuration to use during the analysis. This key is
+    # mutually exclusive with the "file" key and is specified in the case where
+    # the user wants to in-line the security directives configuration in the
+    # file.
+    ##config:
+
+      # Must be the string "Coverity analysis configuration".
+      # Valid values:
+      #   Coverity analysis configuration
+      ##type: Coverity analysis configuration
+
+      # Version of the directives format.
+      ##format_version: 12
+
+      # Language or language family to which directives apply.
+      ##language: <value>
+
+      # Specify a particular analysis behavior.
+      ##directives:
+      ##- <value>
+
+  # Specifies which files to analyze when the "analyze.mode" setting is "hfi".
+  # Analysis will be performed for only these files.
+  files:
+
+    # Glob pattern that specifies the set of source files to exclude from
+    # analysis. Note that any include glob patterns and regular expressions are
+    # processed prior to handling exclude glob patterns and regular
+    # expressions.
+    ##exclude-glob: <value>
+
+    # Regular expression that specifies the set of source files to exclude from
+    # analysis. Note that any include glob patterns and regular expressions are
+    # processed prior to handling exclude glob patterns and regular
+    # expressions.
+    ##exclude-regex: <value>
+
+    # Paths of source files to analyze. Include and exclude glob patterns and
+    # regular expressions are applied to determine which of these files are
+    # actually analyzed.
+    ##include-files:
+    ##- <value>
+
+    # Glob pattern that specifies the set of source files to analyze.
+    ##include-glob: <value>
+
+    # File containing the paths of source files to analyze, one per line.
+    # Include and exclude glob patterns and regular expressions are applied to
+    # determine which of these files are actually analyzed.
+    ##include-list-file: <value>
+
+    # Regular expression that specifies the set of source files to analyze.
+    ##include-regex: <value>
+
+  # Specifies analysis worker parallelism.
+  jobs:
+
+    # If true, the number of analysis workers to run in parallel is based on
+    # the amount of memory and number of logical processors in the machine.
+    # This is the default for a non-Flexnet license. This key is mutually
+    # exclusive with the "count" and "max" keys.
+    ##auto: false
+
+    # Number of analysis workers to run in parallel. This key is mutually
+    # exclusive with the "auto" and "max" keys.
+    ##count: <value>
+
+    # Maximum number of analysis worker to run in parallel, subject to limits
+    # on the amount of memory and number of logical processors in the machine.
+    # A value of 8 is the default for a Flexnet license. This key is mutually
+    # exclusive with the "auto" and "count" keys.
+    ##max: <value>
+
+    # Allows the number of analysis workers to exceed the recommended value.
+    # This key may only be used with the "count" key.
+    ##override-worker-limit: false
+
+  # Specifies whether the analysis should be done locally, in Coverity Connect,
+  # or in Software Risk Manager. The possible values are as follows: connect -
+  # Run the analysis in the Coverity Connect job farm; srm - Run the analysis
+  # in the Software Risk Manager job farm; local - Run the analysis locally
+  # Valid values:
+  #   local
+  #   connect
+  #   srm
+  ##location: local
+
+  # Analysis mode: "pfi" (perfect fidelity incremental) for complete analysis;
+  # or "hfi" (high fidelity incremental) for analysis of only specific files
+  # specified by analyze.files settings, omitting any other files which may
+  # have been incidentally captured by the build. An "hfi" analysis can be
+  # faster but may produce results which are incomplete or inconsistent, due to
+  # the lack of context, and should be used only when speed is more important
+  # than accuracy.
+  # Valid values:
+  #   hfi
+  #   pfi
+  ##mode: pfi
+
+  # File containing function models. This overrides models specified in the
+  # default location of "config/user_models.xmldb".
+  ##model-file: <value>
+
+  # If set to to true, only one TU (translation unit) will be analyzed per
+  # source file name. If set to false, all translation units will be analyzed.
+  ##one-tu-per-psf: true
+
+  # Specifies how parse warnings are handled.
+  parse-warnings:
+
+    # Enables parse warnings, recovery warnings, and semantic warnings that are
+    # produced by the cov-build command so that they appear as defects in
+    # Coverity Connect. By default, this is disabled if the aggressiveness
+    # level is low, and enabled if the aggressiveness level is medium or high.
+    ##enabled: <value>
+
+  # Specifies whether to enable the collection of scan transparency data for
+  # analysis. This setting must be enabled if the Coverity Connect instance has
+  # 'scan.transparency.enabled=true' in its configuration.
+  ##scan-transparency: true
+
+  # Specifies options for Sigma analysis.
+  sigma:
+
+    # List of check sets to enable.
+    # Valid values:
+    #   all
+    #   cis
+    #   default
+    #   empty
+    ##enable-check-set:
+    ##- all
+
+    # List of files containing malicious URL patterns.
+    ##malicious-url-patterns-file:
+    ##- <value>
+
+  # This is a map from trust option name to boolean to indicate whether the
+  # particular trust property should be trusted or distrusted. The trust option
+  # "all" controls whether all trust options should be trusted or distrusted.
+  trust:
+    ##<name>: <value>
+
+# Specifies where the analysis results should be sent.
+commit:
+
+  # Coverity Connect configuration to use when committing defects to Coverity
+  # Connect.
+  connect:
+
+    # The authentication key file to use when authenticating to Coverity
+    # Connect to commit defects. By default, the file located at
+    # $HOME/.coverity/ak-<hostname>-<port> is used.
+    ##auth-key-file: <value>
+
+    # File containing additional certificates to trust in addition to the ones
+    # in the system certificate store and the Coverity TFT store. By default
+    # system CA certificates are used.
+    ##ca-certs-file: <value>
+
+    # If true, analysis results will not be committed to Coverity Connect.
+    # Instead, results compared to a reference snapshot may be saved locally as
+    # specified by the "commit.local" settings.
+    ##comparison-only: <value>
+
+    # Output file to which analysis results should be written instead of being
+    # committed to Coverity Connect. The output includes a comparison against
+    # the latest snapshot for the specified stream.
+    ##comparison-report: <value>
+
+    # Additional arguments to pass to "cov-commit-defects" during the commit
+    # phase.
+    ##cov-commit-defects-args:
+    ##- <value>
+
+    # A description for the committed snapshot.
+    ##description: <value>
+
+    # Indicates whether to trust self-signed certificates presented by Coverity
+    # Connect that are not currently trusted.
+    # Valid values:
+    #   trust
+    #   distrust
+    ##on-new-cert: trust
+
+    # The name of the project to use when creating a new stream. Ignored when
+    # stream creation is not needed. By default the stream name is used.
+    ##project: <value>
+
+    # File containing the client certificate in PEM format, that should be
+    # presented to the proxy when making a request.
+    ##proxy-client-cert-file: <value>
+
+    # File containing the client certificate private key in PEM format, for the
+    # proxy-client-cert-file.
+    ##proxy-client-key-file: <value>
+
+    # URL for a forward proxy to use when communicating with Coverity Connect.
+    # Must be an https URL.
+    ##proxy-url: <value>
+
+    # The name of the source control management system.
+    # Valid values:
+    #   ads
+    #   clearcase
+    #   cvs
+    #   git
+    #   hg
+    #   perforce
+    #   plastic
+    #   plastic-distributed
+    #   svn
+    #   tfs
+    ##scm: ads
+
+    # Specifies how to select a reference snapshot to use for a comparison
+    # report.
+    snapshot:
+
+      # Date and time of snapshot to use for comparison report. The value
+      # should be of the form "YYYY-MM-DDThh:mm:ss" where date and time are
+      # separated by a "T", optionally followed by a time zone specification
+      # consisting of either "Z" denoting UTC or a "+" or "-" character
+      # followed by colon-separated hours and minutes east of UTC. Example:
+      # "2023-12-27T13:21:05-08:00". If no time zone is specified, the local
+      # time zone is assumed. This key is mutually exclusive with the "id" and
+      # "reference" keys.
+      ##date: <value>
+
+      # ID of snapshot to use for comparison report. This key is mutually
+      # exclusive with the "date" and "reference" keys.
+      ##id: <value>
+
+      # One of "idir", "latest", or "scm". "idir" will use the snapshot created
+      # closest to, but not after, the creation date of the intermediate
+      # directory. "latest" will use the snapshot with the latest code-version
+      # date in the specified stream. "scm" will query the SCM to determine the
+      # version that was most recently checked out or updated, and then use the
+      # closest snapshot. This key is mutually exclusive with the "date" and
+      # "id" keys.
+      # Valid values:
+      #   idir
+      #   latest
+      #   scm
+      ##reference: idir
+
+    # The name of the stream to commit the results to.
+    ##stream: <value>
+
+    # Specifies how new defects should be handled.
+    triage:
+
+      # User to whom any new defects will be assigned. The specified user must
+      # already exist in the Coverity Connect database. The default is the
+      # current user.
+      ##new-defect-owner: <value>
+
+      # Limit on the number of defects to assign to the specified user. If the
+      # number of discovered defects is more than the limit, then no assignment
+      # is done.
+      ##new-defect-owner-limit: 100
+
+      # If true, the owner for newly detected defects that exist locally is set
+      # to the specified user.
+      ##set-new-defect-owner: true
+
+    # Artifacts to upload following analysis.
+    # Valid values:
+    #   All
+    #   LogsOnly
+    #   None
+    #   OnFailure
+    ##upload-artifacts: All
+
+    # Absolute URL of where to commit the Coverity Connect results.
+    ##url: <value>
+
+    # A project version for the committed snapshot.
+    ##version: <value>
+
+  # Local configuration to use when saving defects to the local file system.
+  local:
+
+    # Format in which to save defects. Either "html" or "json".
+    # Valid values:
+    #   html
+    #   json
+    ##format: html
+
+    # Directory (for "html" format) or file (for "json" format) in which to
+    # save defects.
+    ##path: <value>
+
+  # Software Risk Manager configuration to use when storing defects in Software
+  # Risk Manager.
+  srm:
+
+    # The URL of the Software Risk Manager to use for the analysis (if doing a
+    # remote analysis) and the analysis results.
+    ##url: <value>
+
+    # The name of the project to associate the analysis results with in
+    # Software Risk Manager.
+    ##project-name: <value>
+
+    # The ID of the project to associate the analysis results with in Software
+    # Risk Manager.
+    ##project-id: <value>
+
+    # The name of the branch to associate the analysis results with in Software
+    # Risk Manager.
+    ##branch: <value>
+
+    # The name of the parent branch of the actual branch.
+    ##parent-branch: <value>
+
+    # The name of the file to read the Software Risk Manager API key from. By
+    # default, the file located at $HOME/.bridge/srm-token.txt is used.
+    ##token-file: <value>
+
+# Specifies how the CLI should handle caching when performing capture/analysis.
+caching:
+
+  # A true value indicates caching will be used when performing remote
+  # analysis.
+  ##enabled: true

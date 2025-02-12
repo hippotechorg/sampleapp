@@ -1,0 +1,1625 @@
+         Coverity 2024.12.0 Command and Ant Task Reference
+
+cov-manage-emit
+
+Manage an intermediate directory.
+
+Synopsis
+
+cov-manage-emit --dir <intermediate_directory> [GENERAL OPTIONS]
+          <COMMANDS> <COMMAND OPTIONS>
+          [SHARED_OPTIONS]
+
+GENERAL OPTIONS:
+
+   [ --cpp | --cs | --java]
+   [--case-normalized-filename]
+   [--preprocess-native]
+   [--ticker-mode <mode>]
+   [--tu <tu_ids> | --tu-pattern <pattern>]
+   [--tus-per-psf <value>]
+
+COMMANDS and COMMAND OPTIONS:
+
+   [add-other-hosts | check-integrity | delete-source | list-builds | repair | reset-host-name]
+   [add <int_dir> | link-file <out_file>] | list | list-capture-invocations | list-json
+   [decompile-binary-tus-from-dir <decompile_options>]
+   [extract-files --output-dir <dir> [--strip-path <path>]... {--regex <regex> | <filename>...}]
+   [{recompile | retranslate | retranslate-or-emit} <recompile_options>]
+   [find [OPTIONS]]
+   [list-compiled-classes]
+   [export-json-build [OPTIONS]]
+   [import-json-build [OPTIONS]]
+   [list-json-schema-versions]
+
+SHARED OPTIONS:
+
+   [--config <coverity_config.xml>]
+   [--debug]
+   [--help]
+   [--info]
+   [--tmpdir <tmp>]
+   [--verbose <level>]
+
+Description
+
+The cov-manage-emit command is used to query and manipulate an emit
+repository. Each intermediate directory contains a single emit repository
+that contains data for languages emitted via cov-build, cov-emit, and
+other similar commands.
+
+The cov-manage-emit command requires the --dir option, plus at least one
+sub-command. the cov-manage-emit command line typically follows this
+pattern:
+
+cov-manage-emit <general_options> <sub-command> <sub-command_options>
+
+The sub-commands can be used for various operations, including:
+
+  • Repairing database integrity (repair).
+
+  • Recompiling (recompile).
+
+  • Decompiling (decompile).
+
+  • Copying information from one intermediate directory into another
+    (add).
+
+  • Aggregating the results of a distributed build into a single
+    intermediate directory (add-other-hosts).
+
+  • Listing source files (print-source-files).
+
+  • Listing AST definitions (find --print-definitions).
+
+  • Inputing and outputting SCM data (add-scm-annotations,
+    dump-scm-annotations).
+
+The cov-manage-emit options are grouped by basic, options that cannot be
+filtered by translation units, options that require translation unit
+filtering, options for listing emit database information, and options for
+recompiling.
+
+Options
+
+Basic options
+
+The --dir option is required. If you use a sub-command that uses
+translation units, you can filter this information with either the --tu
+or --tu-pattern option, or both.
+
+--cpp
+
+    Filters by C/C++ translation units on which this command operates or
+    reports. The command will fail with an informative error message if
+    none of the translation units in the emit match any of the specified
+    language options.
+
+--case-normalized-filename
+
+    By default, cov-manage-emit displays case-preserved file names in the
+    output. Specifying this option allows cov-manage-emit to display
+    normalized file names (that is, names that are entirely lower case).
+
+    For example (assuming you are on Windows and have a file in your emit
+    named MyFile.c):
+
+    cov-manage-emit.exe --dir intdir --case-normalized-filename list
+
+    The output will include the following:
+
+    c:/cygwin/space/int_dir/myfile.c
+
+    Note: In previous releases, case-preserved file names were always
+    printed for Java and C# (regardless of --case-preserved-filename. As
+    of the 7.5.0 release, Java and C# file names will be case-preserved
+    or case-normalized according to specification of this option (
+    --case-normalized-filename), like C/C++ file names. As a result, it
+    is impossible to get the old output of cov-manage-emit (which would
+    case-normalize C/C++ but case-preserve Java/C#) in a multi-language
+    scenario.
+--case-preserved-filename
+
+    Allows cov-manage-emit to display case-preserved file names. This
+    option is enabled by default, so you do not need to specify it with
+    cov-manage-emit list. To switch to normalized file names, use 
+    --case-normalized-filename.
+
+--cs
+
+    Filters by C# translation units on which this command operates or
+    reports. The command will fail with an informative error message if
+    none of the translation units in the emit subdirectory match any of
+    the specified language options.
+
+--dir <intermediate_directory>
+
+    Specifies an existing intermediate directory that was created with
+    the cov-build command. While certain other sub-commands (for example,
+    add) allow you to specify intermediate directories, the one specified
+    with --dir is the directory modified by cov-manage-emit.
+
+--java
+
+    Filters by Java translation units on which this command operates or
+    reports. The command will fail with an informative error message if
+    none of the translation units in the emit match any of the specified
+    language options.
+
+--preprocess-native
+
+    Invokes the native compiler to generate preprocessed output. The emit
+    database is not modified by this operation. The preprocessed output
+    file is stored in the c/output/preprocessed subdirectory of the
+    intermediate directory. This option works only for C/C++ source code.
+
+--ticker-mode <mode>
+    Set the mode of the progress bar ticker. The available modes are:
+
+    none
+
+        No progress bar is displayed.
+
+    no-spin
+
+        Only the print stars are displayed; the spinning bar is not.
+
+    spin
+
+        This is the default mode. Stars with a spinning bar at the end
+        are displayed. Each file, function, or defect committed
+        corresponds to steps of spin.
+
+--tu translation_unit_id(s)
+-tu translation_unit_id(s)
+
+    Identifies a set of translation units (TUs), named by their numeric
+    ID attribute(s). A translation unit approximately maps to the output
+    from a single run of a compiler. This option requires a
+    comma-separated list of id(s), and --tu can be specified multiple
+    times. The union of all these identifier sets is the set of TUs to
+    operate on subsequently, for operations that work on TUs. It is an
+    error if any of the specified IDs do not correspond to any existing
+    translation unit. To get the IDs for translation units, use the list
+    sub-command.
+
+    You can use the --tu and --tu-pattern options together.
+
+--tu-pattern translation_unit_pattern
+-tp translation_unit_pattern
+
+    Identifies a set of translation units specified with a translation
+    unit pattern. The --tu-pattern option can be specified multiple
+    times. Matching TU sets are unioned together across all patterns.
+
+    Both --tu and --tu-pattern can be specified on a single command line.
+    The final set of TUs operated upon includes a given TU if it matches
+    any specified translation unit pattern or its ID is listed explicitly
+    as an argument to --tu.
+
+    It is an error if at least one --tu-pattern argument is specified but
+    no translation unit matches any of the specified patterns.
+
+    You can get useful information on TUs with the list sub-command.
+
+    For more information, see Translation unit pattern matching.
+
+--tu-sort sort_spec
+
+    Specifies the sort order for TU output. The sort_spec accepts the
+    values listed below. To sort on more than one attribute, you can use
+    a non-empty, comma-separated list of values. Additionally, to specify
+    ascending or descending sort order for any attribute, you can add :a
+    or :d (respectively) directly after the attribute name. All
+    attributes are ordered in ascending order by default.
+
+    The available sort attributes are:
+
+      □ emittime: the time spent emitting TUs.
+
+--tus-per-psf value
+
+    Indicates how the set of primary source files affects the set of
+    selected TUs. The possible values are as follows:
+
+      □ all: Select all TUs, possibly as specified by other TU filters.
+        This is the default.
+
+      □ latest: Select only the latest TU with a given primary source
+        file according to the time of compilation. If there are multiple
+        TUs with the same primary source file within a single build, a
+        deterministic TU is chosen within that build, regardless of time
+        of compilation, which allows determinism in the case of parallel
+        builds. This corresponds to the default set of TUs that
+        cov-analyze analyzes. That is, cov-analyze with --one-tu-per-psf
+        corresponds to --tus-per-psf=latest without any other filtering
+        options (see the --one-tu-per-psf option to cov-analyze).
+
+        With at least one --tu option and without a search pattern, the
+        option has no effect. In this case, the system includes only the
+        TUs specified with -tu.
+
+      □ non-latest: Select any but the latest TU with a given primary
+        source file. This is applied after search pattern filtering. The
+        result is undefined if -tu is also used. For instance, to keep
+        only one TU per primary source file, run the following command:
+
+        cov-manage-emit --tus-per-psf=non-latest delete
+
+    Examples:
+
+    To list all the TUs that cov-analyze will operate on:
+
+    > cov-manage-emit --dir <intermediate_directory> \
+        --tus-per-psf=latest list
+
+    To delete TUs and leave only the ones that cov-analyze would operate
+    on:
+
+    > cov-manage-emit --dir <intermediate_directory> \
+        --tus-per-psf=non-latest delete
+
+Non-filtered sub-commands
+
+These sub-commands cannot be filtered with translation unit options.
+
+add-other-hosts
+    Adds all translation units from emit repositories in the current
+    intermediate directory but associated with host names other than the
+    current one. In general, an intermediate directory can contain
+    several emits, each associated with a specific host name. This option
+    copies all of the TUs from emits associated with other hosts into the
+    emit associated with the current host. This sub-command can be used
+    to aggregate the results of a distributed build into a single
+    intermediate directory.
+add-scm-annotations --input <input_file>
+
+    Adds the SCM annotations for the source files in the specified input
+    file to the source files in the intermediate directory. The input
+    file can be the output file of the cov-manage-emit
+    dump-scm-annotations option or the cov-extract-scm.
+
+    This option reads input from standard input when <input_file> is "-".
+    Otherwise, it reads from the specified file.
+
+    Note: If you pipe the output of cov-extract-scmdirectly to
+    cov-manage-emit, for example:
+
+    cov-extract-scm --input input.txt --output - |
+    cov-manage-emit --dir idir add-scm-annotations --input -
+
+    This will always generate at least one error and the first line of
+    output will read Extracting SCM data for ### files.
+
+check-compatible
+
+    Checks if an emit version is compatible with the current Coverity
+    Analysis tools. For example:
+
+    cov-manage-emit --dir idir check-compatible
+
+    This option returns 0 if it is compatible, 1 if it is not compatible,
+    and 2+ if there is an error.
+
+check-integrity
+
+    Checks database integrity. If this check fails, print errors to
+    stdout and exits with a non-zero code. Otherwise, exits with 0.
+
+delete-bytecode
+
+    Removes all file contents from the database. This is useful if you
+    need to provide an intermediate directory to Coverity technical
+    support and want to make sure that source code is excluded.
+
+delete-scm-annotations
+
+    Removes all SCM annotations from the database. This is useful if you
+    need to provide an intermediate directory to Coverity technical
+    support and want to make sure that SCM data is excluded.
+
+delete-source
+
+    Removes only source contents, including all webapp archive files
+    (JSP, XML, and so forth). This option does not remove Java class, JAR
+    files, or .NET bytecode. This is useful if you need to provide an
+    intermediate directory to Coverity technical support and want to make
+    sure that the source content is excluded.
+
+dump-scm-annotations --output <output_file>
+
+    Output all SCM annotations stored in the intermediate directory. This
+    command creates a cache of the SCM annotations that is intended to be
+    reapplied in the future using add-scm-annotations.
+
+    This option places output on a standard output when <output_file> is
+    "-". Otherwise, it outputs to the specified file.
+
+export-json-build <options>
+
+    Exports a captured build to a JSON file for later use with
+    import-json-build.
+
+    Required options for export-json-build:
+
+      □ --output-file <filename>, -of <filename>
+
+        Specify the path to and file name for the JSON file to be
+        exported.
+
+    Optional options for export-json-build:
+
+      □ --schema-version <value>
+
+        Specifies the schema version to use for the JSON file. See the
+        output of cov-manage-emit list-json-schema-versions for a listing
+        of valid values, as well as details about version differences. If
+        not specified, the latest schema version will be used.
+
+      □ --strip-path <path>
+
+        Strips the prefix for the exported file names and paths in the
+        exported JSON file. This may be specified multiple times, but
+        only the first matching strip path for any given path will be
+        stripped. Accordingly, specify multiple strip paths from most
+        specific to least for best results.
+
+import-json-build <options>
+
+    Imports a JSON build file, which can be generated via the
+    export-json-build sub-command, to the intermediate directory
+    specified to cov-manage-emit. Note that the imported directory will
+    not be useful for analysis results until at least a partial capture
+    has been performed after the import. This option is primarily used in
+    combination with cov-run-desktop to enable cov-run-desktop to work
+    without requiring a full native build capture.
+
+    Required options for import-json-build:
+
+      □ --input-file <filename>, -if <filename>
+
+        Specify the path to and file name for the exported JSON file to
+        import.
+
+    Optional options for import-json-build:
+
+      □ --compilation-log <log file>
+
+        Specify a log file to dump diagnostic output from this command
+        to. If this is not specified, then the output from the
+        import-json-build command goes to stdout.
+
+      □ --parallel <number of processes>, -j <number of processes>
+
+        Specify the number of cov-translate processes to use
+        simultaneously for the import. Note that 'auto' can be specified
+        to allow cov-manage-emit to automatically determine the number of
+        processes to use based on the detected hardware.
+
+list-builds
+
+    Reports total number of successful and failed builds.
+
+list-compiled-classes
+
+    Lists the classes contained in the emit that have been compiled. Use
+    with --java or --cs to limit the results to one of the languages. The
+    output is CSV-formatted and written to standard output and is
+    designed to be specified into the cov-build --java-instrument-classes
+    <filename> command.
+
+    The CSV file format has two columns:
+      □ Column 1 - The name of the class.
+
+      □ Column 2 - The full path to the source file for the class.
+
+    This sub-command applies only to Java and .NET, not to C/C++.
+
+list-functions-v1
+
+    Lists the functions in the intermediate directory. The valid command
+    line options are:
+
+      □ --function-pattern <pattern>
+
+        Restrict output to only those functions which match <pattern>.
+        <pattern> follows the syntax described in the Translation unit
+        pattern matching section, however the following predicates are
+        used instead of the predicates described in that section:
+
+          ☆ mangled_name(regex): The function is included if its mangled
+            name matches the given regex.
+
+          ☆ unmangled_name(regex): The function is included if its
+            unmangled name matches the given regex.
+
+          ☆ filename(regex): The function is included if it is in a file
+            whose stripped name matches the given regex.
+
+      □ --output-fields <fields>
+
+        Specifies the fields for each function to include in the output.
+        <fields> is a comma-separated list of keywords from among the
+        following:
+
+          ☆ mangled_name: The mangled name of the function.
+
+          ☆ unmangled_name: The unmangled name of the function.
+
+          ☆ filename: The name of the file containing the function.
+
+          ☆ default: The default output fields. This is equivalent to
+            "mangled_name,unmangled_name,filename", and is the default if
+            the --output-fields option is not specified.
+
+        Output is in CSV format by default, unless the --json option is
+        given. Each line except the first corresponds to a function, and
+        contains the output fields in the order specified. The first line
+        is a header indicating the field names.
+
+      □ --json
+
+        Output in JSON format. The output is a JSON array, where each
+        element corresponds to a function. Each element of this array is
+        an object whose name/value pairs correspond to the specified
+        --output-fields.
+
+      □ --strip-path <path>
+
+        The path prefixes to strip before evaluating file names. Normally
+        this is not required, but it can be used to override the default
+        path.
+
+list-json-schema-versions
+
+    List valid schema-version values for use with export-json-build. A
+    brief description of version differences will accompany each value.
+
+list-scm-known <command_options>
+    Lists the files contained in the emit that have corresponding SCM
+    data included in the emit. The valid command line options are:
+      □ --output <output_file>
+
+        The list is written to standard output when <output_file> is the
+        dash character ("-"). Otherwise, the list is written to the
+        specified file.
+
+      □ --filename-regex <regex>
+
+        Includes a file for consideration if the regular expression
+        (regex) matches the name of the file; this is not case-sensitive.
+
+        For the purpose of turning a file name into a string that can
+        then be matched against a regex, the following normalizations are
+        applied:
+
+          ☆ The name is made absolute, including the drive letter on
+            Windows systems.
+
+          ☆ The forward-slash character ("/") separates name components.
+
+          ☆ When no drive letter is present, the name begins with a
+            forward-slash character ("/"); otherwise, a forward-slash
+            character ("/") follows the drive letter.
+
+      □ --count
+
+        Reports the number of files that would have been reported. If
+        used with --filename-regex, it reports the number of matching
+        files only.
+
+list-scm-unknown <command_options>
+    Lists the source files contained in the intermediate directory that
+    do not have corresponding SCM annotations included in the
+    intermediate directory. The valid command line options are:
+      □ --output <output_file>
+
+        The list is written to standard output when <output_file> is the
+        dash character ("-"). Otherwise, the list is written to the
+        specified file.
+
+      □ --filename-regex <regex>
+
+        Includes a file for consideration if the regular expression
+        (regex) matches the name of the file; this is not case-sensitive.
+
+        For the purpose of turning a file name into a string that can
+        then be matched against a regex, the following normalizations are
+        applied:
+
+          ☆ The name is made absolute, including the drive letter on
+            Windows systems.
+
+          ☆ The forward-slash character ("/") separates name components.
+
+          ☆ When no drive letter is present, the name begins with a
+            forward-slash character ("/"); otherwise, a forward-slash
+            character ("/") follows the drive letter.
+
+      □ --count
+
+        Reports the number of files that would have been reported. If
+        used with --filename-regex, it reports the number of matching
+        files only.
+
+query-build-id
+
+    Outputs the current build ID for this intermediate directory.
+
+repair
+
+    Repairs database integrity. This operation might cause data loss,
+    such as discarding translation units that are damaged.
+
+reset-host-name
+
+    If the specified intermediate directory has data associated with a
+    single host name other than the current host name, changes the host
+    name associated with the emit database to the current host name.
+
+set-build-id
+
+    Sets the build ID of the specified intermediate directory. The valid
+    command line options are:
+
+    --build-id <build-id>
+
+        Set the build ID of the specified intermediate directory to
+        <build-id>.
+
+    --build-id-file <build-id-file>
+
+        <build-id-file> is a file containing a build ID. Set the build ID
+        of the specified intermediate directory to the value contained by
+        this file.
+
+Translation unit sub-commands with optional filtering
+
+The following filtering sub-commands work on translation units. By
+default, all translation units are included in the results. You can
+optionally restrict the translation units used in these operations with
+the --tu and/or --tu-pattern options.
+
+The options for listing emit database information and recompiling also
+support restricting the translation units with the --tu and/or
+--tu-pattern options.
+
+add <int_dir>
+    Add (copy) all translation units from a specified intermediate
+    directory (<int_dir>) into the current one (the one specified with
+    the --dir option). If --tu and/or --tu-pattern are specified, then
+    those filters are interpreted as applying to the source emit, and
+    only the matching subset is copied.
+    CAUTION: Combining intermediate directories can cause defect reports
+    to appear or disappear, because the information in one intermediate
+    directory can affect the information in another.
+link-file <out_file>
+
+    Create a file (<out_file>) with a description of the specified
+    translation units as a link file, which can be used as input to
+    cov-link.
+
+list
+
+    List all translation units in the intermediate directory. Each
+    translation unit is identified by its numeric ID, which is listed
+    along with its primary source file name.
+
+list-capture-invocations
+
+    For each emitted translation unit (TU) and link unit (LU) that is not
+    filtered-out by command line options, this command produces JSON
+    formatted UTF-8 encoded output that describes the captured build
+    invocations, recorded process invocations, cov-emit and/or 
+    cov-emit-link invocations generated for each compilation or linker
+    action, and select input and output files and their kind (for
+    example, C source file, object file, static library).
+
+    Command syntax
+
+    cov-manage-emit <GENERAL OPTIONS> list-capture-invocations <COMMAND OPTIONS>
+
+    where <COMMAND OPTIONS> specific to this command are:
+
+      □ --no-process-details
+
+        Omit all cov-build, cov-translate, cov-emit- * process invocation
+        details. This option reduces the output to translation units,
+        link units, and their associated files.
+
+    Output format
+
+    The JSON output is a single object that contains members with values
+    that denote metadata (type, version information), process invocation,
+    TU or LU data. The root object members are:
+
+      □ type: A constant string that contains "Coverity Capture
+        Invocations". For example:
+
+        "type": "Coverity Capture Invocations"
+
+      □ version: A string that contains the Coverity version that
+        produced the JSON file. For example:
+
+        "version": "2021.06"
+
+      □ files: An array that associates IDs with paths used to name a
+        file or directory. Both case-normalized and case-preserved paths
+        are provided. For example:
+
+        "files": [
+          {
+            "id": 1,
+            "case-normalized": "/path/to/file.cpp",
+            "case-preserved": "/Path/to/File.cpp"
+          }
+        ]
+
+      □ environment-variables: An array that associates IDs with names
+        and values for environment variables. For example:
+
+        "environment-variables": [
+          {
+            "id": 1,
+            "name": "VAR",
+            "value": "Value"
+          }
+        ]
+
+      □ environment-variable-blocks: An array that associates IDs with
+        sets of environment variable IDs. Processes spawned with the same
+        set of environment variables share an environment variable block.
+        For example:
+
+        "environment-variable-blocks": [
+          {
+            "id": 1,
+            "environment-variable-ids": [ 1, 2, 6 ]
+          }
+        ]
+
+      □ cov-build-invocations: An array that associates IDs with build
+        process invocations. For example:
+
+        "cov-build-invocations": [
+          {
+            "id": 1,
+            "process-invocation": {
+              "hostname": "skippy",
+              "pid": 1234,
+              "start-time": "2021-03-15T11:35:12Z",
+              "end-time": "2021-03-15T11:35:14Z",
+              "exit-code": 0,
+              "platform": "Linux x86_64",
+              "username": "sadie",
+              "command-line": [ "cov-build", "--dir", "covint", "make" ],
+              "working-directory-id": 1,
+              "environment-variable-block-id": 1,
+            }
+          }
+        ]
+
+      □ cov-translate-invocations: An array that associates IDs with
+        cov-translate process invocations. For example:
+
+        "cov-translate-invocations": [
+          {
+            "id": 1,
+            "process-invocation": { ... }
+          }
+        ]
+
+      □ cov-emit-invocations: An array that associates IDs with cov-emit
+        or cov-internal-emit-clang process invocations. For example:
+
+        "cov-emit-invocations": [
+          {
+            "id": 1,
+            "process-invocation": { ... }
+          }
+        ]
+
+      □ cov-emit-cs-invocations: An array that associates IDs with
+        cov-emit-cs invocations.
+
+      □ cov-emit-fortran-invocations: An array that associates IDs with
+        cov-emit-fortran invocations.
+
+      □ cov-emit-go-invocations: An array that associates IDs with
+        cov-emit-go invocations.
+
+      □ cov-emit-java-invocations: An array that associates IDs with
+        cov-emit-java invocations.
+
+      □ other-emit-invocations: An array that associates IDs with
+        cov-emit-misc invocations.
+
+      □ cov-emit-link-invocations: An array that associates IDs with
+        cov-emit-link process invocations. For example:
+
+        "cov-emit-link-invocations": [
+          {
+            "id": 1,
+            "process-invocation": { ... }
+          }
+        ]
+
+      □ translation-units: An array that associates IDs with sets of
+        properties that describe translation units, including associated
+        process invocations and input files. For example:
+
+        "translation-units": [
+          {
+            "id": 1,
+            "cov-build-invocation-id": 1,
+            "cov-translate-invocation-id": 1,
+            "cov-emit-invocation-id": 1,
+            "emit-failed": false,
+            "kind": "C++",
+            "primary-file-id": 1,
+            "input-files": [
+              {
+                "file-id": 1,
+                "kind": "source file",
+                "implicit": false
+              }
+            ]
+          }
+        ]
+
+      □ link-units: An array that associates IDs with sets of properties
+        that describe link units, including associated process
+        invocations, link unit types, and input files. For example:
+
+        "link-units": [
+          {
+            "id": 1,
+            "cov-build-invocation-id": 1,
+            "cov-translate-invocation-id": 1,
+            "cov-emit-link-invocation-id": 1,
+            "emit-failed": false,
+            "kind": "object library",
+            "primary-file-id": 1,
+            "input-files": [
+              {
+                "file-id": 1,
+                "kind": "object file",
+                "implicit": false
+              }
+            ]
+          }
+        ]
+
+      □ metrics: An object with members that contain build capture
+        statistics. For example:
+
+        "metrics": {
+          "tu-count": 500,
+          "tu-failures": 3,
+          "lu-count": 10,
+          "lu-failures": 0
+        }
+
+list-json
+
+    List all translation units in the intermediate directory as a
+    standards-compliant JSON array. The translation units are identified
+    by a numeric ID, which is listed along with the following fields:
+
+      □ id: The unique numeric translation unit ID.
+
+      □ primaryFilename: The primary source file name.
+
+      □ primaryFileSizeInBytes: The size of the primary source file in
+        bytes.
+
+      □ primaryFileHash: MD5 hash of the contents of the primary source
+        file.
+
+      □ language: String describing the translation unit language.
+
+      □ userLanguage: The user-specified translation unit language.
+
+      □ hasASTs: Boolean. 'true' if the intermediate directory contains
+        an AST for this translation unit, otherwise 'false'.
+
+    Example output:
+
+    [
+      {
+        "id" : 1,
+        "primaryFilename" : "/home/build/project/tu1.cpp”,
+        "primaryFileSizeInBytes" : 92,
+        "primaryFileHash" : "6f700a28a47e79cddff8fba60cac7098",
+        "language" : "C++”,
+        "userLanguage" : "C++”,
+        "hasASTs" : true
+      },
+      {
+        "id" : 2,
+        "primaryFilename" : "c:/project/stdafx.cpp",
+        "primaryFileSizeInBytes" : 122,
+        "primaryFileHash" : "3827e3e7426ce0bdebb7e51c94d2a680",
+        "language" : "C++",
+        "userLanguage" : "C++",
+        "hasASTs" : false
+      }
+    ]
+
+    Note: The output of this command may contain additional attributes
+    that are not documented here. For maximum interoperability, please
+    ignore any attribute that is not documented.
+extract-files --output-dir <dir> [--strip-path <path>]... {--regex
+    <regex> | <filename>...}
+
+    Extracts files present in the emit directory to the specified output
+    directory.
+
+    The original directory, optionally stripped by any --strip-path
+    arguments, will be made relative to the specified output directory
+    (on Windows, the drive letter, if any, is always removed). Specify
+    the files to extract by including either a regular expression or a
+    list of file names. If you include the --regex option, all files
+    whose name matches the given regular expression are extracted: for
+    this purpose, the file names are represented using a '/' separator.
+    If a TU filter (--tu, --tu-pattern) is provided, only files
+    referenced by the filtered TUs are included.
+
+Translation unit sub-commands with required filtering
+
+The following filtering sub-commands work on translation units. You must
+supply the translation units used in these operations with the --tu and/
+or --tu-pattern options. The TU list sub-command identifies the TUs
+available for your required filter.
+
+delete
+
+    Delete all TUs that satisfy the specified translation unit filter.
+
+preprocess
+
+    Similar to recompile, except that when cov-emit is invoked, it is
+    passed the -E (preprocess) and --output_defs options, which results
+    in preprocessing only. The emit database is not modified by this
+    operation.
+
+    The preprocessed output file (which is the stdout of cov-emit) is
+    stored in the preprocessed subdirectory of the c/output subdirectory
+    of the intermediate directory. The name of the file is the name of
+    the primary source file for the TU, minus any path information, minus
+    any file extension, plus either .i or .ii.
+
+    This option works only for C/C++ source code, not Java.
+
+print-compilation-info [options]
+
+    For the specified translation units, print the command lines for
+    cov-emit, cov-translate (if it was run), and cov-build (if it was
+    run).
+
+    The options are:
+      □ --detailed - provides all process details except environment
+        variables.
+
+      □ --print-env - provides the environment variable definitions for
+        the process.
+
+print-compilation-time
+
+    Prints the invocation time of any cov-build, cov-emit, cov-emit-cs,
+    cov-emit-java, cov-emit-vb, cov-translate, or for a given translation
+    unit (TU) to be easily accessible.
+
+    Usage examples
+
+    cov-manage-emit --dir dir -tu <TU#> print-compilation-time
+
+    cov-manage-emit --dir dir -tp <pattern> print-compilation-time
+
+    Output example:
+
+    cov-manage-emit --dir idir -tp "success()" print-compilation-time
+
+    Looking for translation units
+    |0----------25-----------50----------75---------100|
+    ****************************************************
+    Translation unit:
+    1 -> /Users/emoriarty/Testing/BZ55606/test.cpp
+    cov-emit invocation time (seconds): 1
+    cov-translate invocation time (seconds): 1
+    cov-build invocation time (seconds): 2
+    Translation unit:
+    2 -> /Users/emoriarty/Testing/BZ55606/test.cpp
+    cov-emit invocation time (seconds): 2
+    cov-translate invocation time (seconds): 2
+    cov-build invocation time (seconds): 2
+    Translation unit:
+    3 -> /Users/emoriarty/Testing/BZ55606/test.cpp
+    cov-emit invocation time (seconds): 2
+    cov-translate invocation time (seconds): 2
+    cov-build invocation time (seconds): 2
+    Translation unit:
+    4 -> /Users/emoriarty/Testing/BZ55606/test.cpp
+    cov-emit invocation time (seconds): 2
+    cov-translate invocation time (seconds): 2
+    cov-build invocation time (seconds): 2
+
+print-source
+
+    For the specified translation units, list the name and the contents
+    of the primary source file associated with the TU. This option also
+    reports, in parentheses, the internal row ID of the source file. It
+    accepts the same command options as print-source-files-contents .
+
+print-source-files
+
+    For the specified translation units, list the names of all the source
+    files associated with the TU. Also reports, in parentheses, the
+    internal row ID of the source file.
+
+print-source-files-contents
+
+    For the specified translation units, list the names and contents of
+    all the source files associated with the TU. Also reports, in
+    parentheses, the internal row ID of the source file.
+
+    print-source-files-contents has the following options:
+
+      □ --scm-annotations - Prefixes each source line with the change
+        record (or commit record) that contributed most recently to the
+        line. The change record data that is as follows:
+
+        Date and time that the change record was applied according to the
+        SCM system.
+
+        The author (username) attributed to the change record.
+
+        The revision of the change, which is an identifier for the change
+        record provided by the SCM system.
+
+print-source-files-stats
+    For the specified translation units, list the names of all of the
+    source files associated with the TU. Also reports the internal row ID
+    of the source file (in parentheses) followed by statistics for that
+    source file. The statistics listed include:
+      □ The file contents time stamp, size, and MD5 sum
+
+      □ The count of blank lines
+
+      □ The count of comment lines
+
+      □ The count of code lines
+
+      □ The count of code lines with inline comments
+
+    Example output is as follows:
+
+    1 -> /example_dir/a.cpp
+      Primary SF : /example_dir/a.cpp (row ID 1)
+        Timestamp:     2013-07-19 11:37:35
+        Size:          25
+        MD5 sum:       7edc175dc475923c51c579924b724a8c
+        Blank lines:   1
+        Comment lines: 0
+        Code lines:    2 (1 with inline comments)
+
+print-tuid
+
+    Prints the TU ids for the TU requested using either -tu or
+    --tu-pattern. Unlike most commands that will error if an invalid tu
+    is specified, print-tuid will silently ignore it. For example:
+
+    $ cov-manage-emit --dir foo --tu-pattern 'success()' print-tuid
+    Looking for translation units
+    |0----------25-----------50----------75---------100|
+     ****************************************************
+     1
+     3
+     4
+
+
+    $ cov-manage-emit --dir foo --tu-pattern 'success()' print-tuid -of tuids.txt
+    Looking for translation units
+    |0----------25-----------50----------75---------100|
+     ****************************************************
+     $ cat tuids.txt
+     1
+     3
+     4
+
+Listing emit database information
+
+The find sub-command lists information stored in the emit DB such as
+symbol names, locations, and definitions. By default, all translation
+units are included in the results. You can optionally restrict the
+translation units used in these operations with the --tu and/or
+--tu-pattern options.
+
+What is being matched by the regular expression (regex) is, in C++, the
+mangled name of the symbol (according to the IA64 C++ ABI, see https://
+itanium-cxx-abi.github.io/cxx-abi/abi.html#mangling), of which the actual
+identifier is always a substring. In C, what is matched is just the
+identifier.
+
+find regular expression [OPTIONS]
+
+    There are four kinds of symbols: functions, classes, global
+    variables, and enumerations. If you specify find regular expression,
+    then the listing for the matching regex command is the symbol name,
+    the kind of entity, the declaration location, and the definition TU.
+
+You can control the information that is returned by using the following
+options:
+
+--kind {f | c | e | g}
+
+    Restricts the search to certain types of entities. The choices are f,
+    c, e and g, for function, class, enum, and global, respectively.
+
+--print-callees
+
+    For a function, lists the set of functions it calls. Does not list
+    information on other entities.
+
+--print-codexm
+
+    Lists the entity's abstract syntax tree (AST) definition as CodeXM
+    patterns.
+
+    CodeXM is a specialized language used to write customized checkers
+    that run using the Coverity engine.
+
+--print-definitions
+
+    Lists the entity's definition syntax by pretty-printing the AST
+    definition.
+
+--print-debug
+
+    Lists the entity's AST definition in debug (indented tree) mode.
+
+The find sub-command accepts multiple operands and applies each of them
+as an inclusive filter when searching for symbols. In the following
+example, the first invocation of cov-manage-emit displays all symbols
+(global_1 and global_2). .
+
+$ cat t.c
+int global_1 = 1;
+int global_2 = 2;
+
+$ cov-emit --dir covint t.c
+Emit for file '/tmp/t.c' complete.
+
+$ cov-manage-emit --dir covint find .
+Matching global: global_1
+ declared at:
+   /tmp/t.c:1:5-/tmp/t.c:1:12
+ defined in TU 1 with row 1
+Matching global: global_2
+ declared at:
+   /tmp/t.c:2:5-/tmp/t.c:2:12
+ defined in TU 1 with row 2
+
+The following two examples supply a regex command that selects exactly
+one of those symbols.
+
+$ cov-manage-emit --dir covint find global_1
+Matching global: global_1
+ declared at:
+   /tmp/t.c:1:5-/tmp/t.c:1:12
+ defined in TU 1 with row 1
+
+$ cov-manage-emit --dir covint find global_2
+Matching global: global_2
+ declared at:
+   /tmp/t.c:2:5-/tmp/t.c:2:12
+ defined in TU 1 with row 2
+
+
+The following invocation specifies multiple regex commands that select
+both symbols.
+
+$ cov-manage-emit --dir covint find global_1 global_2
+Matching global: global_1
+ declared at:
+   /tmp/t.c:1:5-/tmp/t.c:1:12
+ defined in TU 1 with row 1
+Matching global: global_2
+ declared at:
+   /tmp/t.c:2:5-/tmp/t.c:2:12
+ defined in TU 1 with row 2
+
+Recompiling
+
+The recompile sub-commands repeat a cov-emit compilation. You can use
+this option, for example, with updated cov-emit binary or compiler
+configuration settings to attempt to compile inputs that have previously
+failed. This is similar to cov-build --replay.
+
+You can modify the translation units that are recompiled with the --tu
+and/or --tu-pattern options.
+
+The recompile sub-commands are:
+
+parse-source-only-tus [OPTIONS]
+
+    Recompiles source-only TUs from the intermediate directory (those
+    that were added through cov-build --record-with-source and that have
+    not been recompiled already).
+
+    This subcommand works only for C/C++ source code.
+
+recompile [OPTIONS]
+
+    Recompile the set of TUs specified by the filter. For each TU to be
+    recompiled, invoke cov-emit with the command line, environment
+    settings, and current directory recorded in the emit repository.
+    Source files are re-read from the file system.
+
+    Note: This subcommand will not correctly recompile your selected TUs
+    if the intermediate directory has been moved since running cov-emit.
+    If you have moved your intermediate directory to a new location or
+    separate machine, use recompile-from-dir and specify the new --dir
+    location.
+recompile-from-dir [OPTIONS]
+
+    Recompiles translation units from source contained within the emit
+    directory. Replaying from the emit will have the same results,
+    regardless of changes to the files in the filesystem (including
+    deletion).
+
+    This option is similar to cov-build --replay-from-emit, but it allows
+    you to perform finer-grained filtering of the TUs being replayed. For
+    example:
+
+    cov-manage-emit --dir idir --tu 10 recompile-from-dir
+
+    This subcommand works only for C/C++ source code.
+
+replay-from-script -if json_file [OPTIONS]
+
+    Reads a JSON script produced by IncrediBuild or in the LLVM
+    Compilation Database format, builds a list of compile commands, and
+    executes each of the compile commands against cov-translate for
+    accelerating Windows code builds.
+
+    The -if json_file option points to the JSON script file that is
+    described in the replay_from_script command.
+
+    For more information, see "Using IncrediBuild" in the Coverity
+    Analysis 2024.12.0 User and Administrator Guide.
+
+    Note: --record-only works the same as cov-build --record-only,
+    recording the build to be replayed later.
+retranslate [OPTIONS]
+
+    Run cov-translate on the set of TUs specified by the filter.
+
+    For each TU to be recompiled, invoke cov-translate using the command
+    line, environment settings, and current directory recorded in the
+    emit repository. Does not work with a TU complied directly by
+    cov-emit.
+
+    Invocation of cov-translate requires a Coverity configuration. By
+    default, the configuration that was used during the initial
+    compilation will be used, but this can be overridden by specifying a
+    configuration on the cov-manage-emit command line.
+
+    This subcommand works only for C/C++ source code.
+
+    Note: Note that this subcommand will not correctly retranslate your
+    selected TUs if the intermediate directory has been moved since
+    running cov-emit.
+retranslate-or-emit [OPTIONS]
+
+    Run cov-translate on the set of TUs specified by the filter.
+
+    Similar to the retranslate option, except that in the case of a TU
+    where cov-emit was invoked directly without cov-translate, invokes
+    cov-emit instead of using cov-translate.
+
+    This subcommand works only for C/C++ source code.
+
+    Note: Note that this subcommand will not work correctly if the
+    intermediate directory has been moved since running cov-emit.
+
+The recompile sub-command [OPTIONS] are as follows:
+
+--compilation-log log_file
+
+    Saves diagnostic messages from cov-translate and cov-emit to log_file
+    (instead of the default of standard output and standard error). Also
+    displays a progress ticker bar.
+
+--desktop
+
+    Used in conjunction with Desktop Analysis to perform recompilation
+    faster by disabling bytecode decompilation in Java, C#, and Visual
+    Basic builds.
+
+--do-decomp
+
+    Used in conjunction with Desktop Analysis to perform recompilation in
+    Java builds where bytecode decompilation is enabled.
+
+--emit-complementary-info
+    Enables emitting of complementary information for compliance checkers
+    such as MISRA checkers. Selecting this option results in a slower
+    build capture but a faster analysis, and it should be applied when
+    using compliance checkers. The default value is
+    --no-emit-complementary-info
+    Note: Enabling the --emit-complementary-info option prior to running
+    an analysis is likely to turn up additional defects.
+
+    Any analysis involving --coding-standard-config requires the
+    information generated during cov-build when including the
+    --emit-complementary-info option. The cov-build command will take
+    longer, so this option should only be used when cov-analyze is used
+    with --coding-standard-config.
+
+    If cov-build did not include the --emit-complementary-info option and
+    cov-analyze does include --coding-standard-config, cov-analyze
+    automatically re-runs every cov-emit command (for the Translation
+    Units to be analyzed). This excludes the native build and the
+    cov-translate overhead, but it will add significant overhead to
+    cov-analyze. Note that analysis will fail if the emit database does
+    not include source; that is re-emit is not possible.
+
+--name name
+
+    Associates any new TUs created with a build named name. New TUs are
+    not created by parse-source-only-tus or recompile-from-dir. These
+    commands will reuse the existing TUs, so this option will have no
+    effect. TUs will also not be created if the TUs are already up to
+    date.
+
+--parallel number_of_processes
+-j number_of_processes
+
+    Spawn up to number_of_processes processes to run the recompilations.
+    This option accepts the number of processes, or auto which sets the
+    number of replay processes to the number of logical processors in the
+    machine (-j 0 is also accepted and is the same as auto).
+
+Decompiling
+
+The decompile-binary-tus-from-dir subcommands repeat a decompilation
+recorded in the emit.
+
+decompile-binary-tus-from-dir [OPTIONS]
+
+    Decompiles translation units from byte code source contained within
+    the emit directory. Replaying from the emit will have the same
+    results, regardless of changes to the files in the filesystem
+    (including deletion).
+
+    This option is similar to cov-build --replay-decomp, but it allows
+    you to perform finer-grained filtering of the TUs that are being
+    replayed. For example:
+
+    cov-manage-emit --dir idir --tu 10 decompile-binary-tus-from-dir
+
+The decompile sub-commands are:
+
+--compilation-log <log_file>
+
+    Saves diagnostic messages to <log_file> (instead of the default of
+    standard output and standard error). Also displays a progress ticker
+    bar.
+
+--disable-decomp-bodies
+
+    Disable decompiling method bodies of the byte code.
+
+Translation unit pattern matching
+
+The argument to --tu-pattern is a string that acts as a filter on
+translation units. Alternatively, to use a file name for a pattern,
+specify @filename. Each pattern in this file must be on a separate line.
+
+To get useful information about the translation units in an emit
+repository, use the list sub-command.
+
+A pattern has the following syntax:
+
+[!] function("regex"|'regex') [|| function("regex")]
+    [&& function("regex")]
+
+When combining patterns, the precedence from lowest to highest, is OR (|
+|), AND (&&), and NEG (!). OR and AND are left-associative. You can use
+parentheses to group expressions to override precedence or associativity.
+The regex is a Perl regular expression. A backslash in a quoted string is
+interpreted as a regular expression metacharacter, and not as a string
+literal metacharacter. You can use single or double quotes to pass the
+string properly from the shell to the command. The Perl regex is used for
+partial matches; for full matches use the beginning of line (^) and end
+of line ($) symbols.
+
+The values for function for where to apply the regular expression are:
+
+all
+
+    No argument. Matches all compilations. Used when all TUs desired and 
+    tu-pattern required.
+
+arg
+
+    Matches if the regex matches any of the native compiler command line
+    elements, including the native compiler executable itself.
+
+build_arg:
+
+    Matches if the regex matches any argument to cov-build, including the
+    cov-build executable name.
+
+build_name("regex")
+
+    Matches if cov-build --name name compiled the translation unit and
+    name is matched by regex.
+
+cov_emit_arg
+
+    Matches if the regex matches any argument to the Coverity compiler
+    front end, such as cov-emit, including the executable name.
+
+file
+    Matches if the regex matches the name of the primary source file. For
+    the purpose of turning a file name into a string that can then be
+    matched against a regex, the following normalizations are applied:
+      □ The name is converted to an absolute pathname. On Windows, this
+        includes the drive letter.
+
+      □ On Windows, all letters are lower-cased, including the drive
+        letter (this applies to all names in translation units created on
+        Windows).
+
+      □ The forward-slash character (/) separates name components.
+
+      □ When no drive letter is present, the name begins with /;
+        otherwise, a / follows the drive letter.
+
+    For example:
+
+    --tu-pattern "file('test\.c$')"
+
+failure
+
+    No argument. Matches if the compilation was unsuccessful (exit code !
+    = 0). Used by cov-build --replay-failures.
+
+header
+
+    Matches if the regex matches the name of any header file, which is
+    defined to be a source file included in the TU other than the primary
+    source file.
+
+lang("lang")
+    The lang pattern matches TUs with one of the following specified
+    language patterns:
+      □ C
+      □ C++
+      □ C#
+      □ CUDA
+      □ Dart
+      □ .NET bytecode
+      □ Fortran
+      □ Go
+      □ HTML
+      □ Java
+      □ JavaScript
+      □ JSX
+      □ JVM bytecode
+      □ Kotlin
+      □ Objective-C
+      □ Objective-C++
+      □ PHP
+      □ Python 3
+      □ Ruby
+      □ Scala
+      □ Swift
+      □ Text
+      □ TypeScript
+      □ Visual Basic
+      □ Vue.js SFC
+link_file
+
+    The regex is not interpreted as a regular expression, but rather as
+    the name of a file, which should be the output of cov-link (or
+    cov-manage-emit link_file).
+
+success
+
+    No argument. Matches if the compilation was successful (exit code =
+    0).
+
+Shared options
+
+--config <coverity_config.xml>
+-c <coverity_config.xml>
+
+    Uses the specified configuration file instead of the default
+    configuration file located at <install_dir>/config/
+    coverity_config.xml.
+
+--debug
+-g
+
+    Turn on basic debugging output.
+
+--help
+-h
+
+    Prints a usage message to the command console, then exits.
+
+--info
+
+    Displays certain internal information (useful for debugging),
+    including the temporary directory, user name and host name, and
+    process ID.
+
+--tmpdir <tmp>
+-t <tmp>
+
+    Specifies the temporary directory to use.
+
+      □ On UNIX, the default is $TMPDIR, or /tmp if that variable does
+        not exist.
+
+      □ On Windows, the default is to use the temporary directory
+        specified by the operating system.
+
+--verbose <0, 1, 2, 3, 4>
+-V <0, 1, 2, 3, 4>
+
+    Set the detail level of command messages. Higher is more verbose
+    (more messages). Defaults to 1.
+
+Exit codes
+
+Most Coverity Analysis commands can return the following exit codes:
+
+  • 0: The command successfully completed the requested task.
+
+  • 1: The requested task is complete, but it did not return (or find)
+    any results. Note that some Coverity Analysis commands do not return
+    this error code.
+
+  • 2: The command was unable to complete the requested task. This error
+    typically includes an error message and some remediation advice.
+
+  • 4: An unexpected error occurred. This error should not occur when the
+    product is used in a supported way. Very likely, the requested task
+    was not completed. This error typically provides some diagnostic and/
+    or debugging output, such as a stack trace.
+
+For exceptions, see cov-commit-defects, cov-analyze, and cov-build.
+
+Examples
+
+List build information from an intermediate directory:
+
+> cov-manage-emit --dir apache_2111 \
+    list-builds
+
+List all translation unit information from an intermediate directory:
+
+> cov-manage-emit --dir apache_2111 \
+    list
+
+List information from an intermediate directory for the translation unit
+with the ID 6:
+
+> cov-manage-emit --dir apache_2111 --tu 6 \
+    list
+
+List all information on all entities:
+
+> cov-manage-emit --dir apache_2111 \
+    find  '.*'
+
+List only callee information for all entities:
+
+> cov-manage-emit --dir apache_2111 \
+    find --print-callees  '.*'
+
+List all information for entity uninit:
+
+> cov-manage-emit --dir apache_2111 \
+    find  '^uninit$'
+
+List the definition of entity uninit:
+
+> cov-manage-emit --dir apache_2111 \
+    find  '^uninit$' --print-definitions
+
+List the source files of TU 1:
+
+> cov-manage-emit --dir apache_2111 \
+    --tu 1 print-source-files
+
+List TUs where bar.cc or foo.cc is the primary source file:
+
+> cov-manage-emit --dir apache_2111 \
+    --tu-pattern "file('bar.\cc$') || file('foo.\cc$')" list
+
+List TUs using patterns specified in the file files:
+
+> cov-manage-emit --dir apache_2111 \
+    --tu-pattern @files list
+
+Recompile the TUs in the emit database:
+
+> cov-manage-emit --dir apache_2111  recompile
+
+Recompile and put diagnostic information in the 211_log.txt file:
+
+> cov-manage-emit --dir apache_2111 \
+    recompile --compilation-log 211_log.txt
+
+Recompile only TU 1:
+
+> cov-manage-emit --dir apache_2111 \
+    --tu 1 recompile --compilation-log 211_log.txt
+
+Recompile translation units where test.c is the primary source file:
+
+> cov-manage-emit --dir apache_2111 \
+        --tu-pattern "file('test\.c$')" recompile
+
+List source files missing SCM annotations from the intermediate
+directory:
+
+> cov-manage-emit --dir apache_2111 \
+    list-scm-unknown --output files-without-scm-age-data.txt
+
+List source files under /builds missing SCM annotations from the
+intermediate directory:
+
+cov-manage-emit --dir apache_2111 list-scm-unknown  \
+       --output files-without-scm-annotation-data.txt \
+       --filename-regex '^/builds/'
+
+List source files with existing SCM annotations in the intermediate
+directory:
+
+> cov-manage-emit --dir apache_2111 \
+    list-scm-known --output files-with-scm-age-data.txt
+
+List source files under /builds with existing SCM annotations from the
+intermediate directory:
+
+ cov-manage-emit --dir apache_2111 \
+       list-scm-known --output files-with-scm-annotations.txt \
+       --filename-regex '^/builds/'
+
+Count the source files under /builds with existing SCM annotations from
+the intermediate directory:
+
+cov-manage-emit --dir apache_2111 \
+      list-scm-known --output count-files-with-scm-annotations.txt \
+      --filename-regex '^/builds/' --count
+
+Add SCM annotations for source files in the intermediate directory:
+
+> cov-manage-emit --dir apache_2111 \
+     add-scm-annotations --input scm-age-data.txt
+
+Dump SCM annotations for source files in the intermediate directory:
+
+> cov-manage-emit --dir apache_2111 \
+    dump-scm-annotations --output scm-age-data.txt
+
+Remove all SCM annotations from the intermediate directory:
+
+cov-manage-emit --dir apache_2111 delete-scm-annotations
+
+See also
+
+cov-build
+
+cov-extract-scm
+
+© Black Duck Software, Inc. All rights reserved worldwide.
+
+
+Copyright 2024 Black Duck Software, Inc. tech-support@blackduck.com

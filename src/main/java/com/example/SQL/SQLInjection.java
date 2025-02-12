@@ -33,7 +33,7 @@ public class SQLInjection {
 				}
 			}
 		} catch (final Exception ex) {
-			ex.printStackTrace();
+			// ex.printStackTrace();
 		//  }finally {
 		//  	if (conn != null ) {
 		//  		try {
