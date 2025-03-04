@@ -1,15 +1,17 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  	<parent>
+    	<groupId>sampleapp</groupId>
+    	<artifactId>sampleapp</artifactId>
+    	<version>0.0.1-SNAPSHOT</version>
+  	</parent>
+	
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>sampleapp</groupId>
 	<artifactId>sampleapp</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<name>sampleapp</name>
-	<!-- https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api -->
-	<properties>
-		<org.slf4j-version>1.7.13</org.slf4j-version>
-	</properties>
+	<name>sampleapp Child POM</name>
+	<packaging>jar</packaging>
+  	
 	<dependencies>
 		<dependency>
 			<groupId>org.postgresql</groupId>
