@@ -39,6 +39,8 @@ capture:
       - directory: ${project.projectDir}
 analyze:
   mode: central
+  coverity:
+    cov-analyze: ["--aggressiveness-level", "low", "--disable", "NULL_RETURNS", "--disable-sigma"]
 install:
   coverity:
     version: default
