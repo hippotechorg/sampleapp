@@ -6,10 +6,14 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/x
     	<artifactId>sampleapp</artifactId>
     	<version>0.0.1-SNAPSHOT</version>
   	</parent> -->
+	<groupId>sampleapp</groupId>
+	<artifactId>sampleapp_test</artifactId>
+   	<version>0.0.1-SNAPSHOT</version>
 	
-	<modelVersion>4.0.0</modelVersion>
+	<!-- <modelVersion>4.0.0</modelVersion>
 	<artifactId>sampleapp</artifactId>
-	<name>sampleapp Child POM</name>
+	<name>sampleapp Child POM</name> -->
+	<modelVersion>4.0.0</modelVersion>
 	<packaging>jar</packaging>
   	
 	<dependencies>
