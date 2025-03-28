@@ -6,7 +6,7 @@
 	<groupId>sampleapp</groupId>
 	<artifactId>sampleapp</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>pom</packaging>
+	<!-- <packaging>pom</packaging> -->
  	
 	<name>sampleapp Parent</name>
 	
