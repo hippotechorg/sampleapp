@@ -29,7 +29,7 @@ jobs:
         cache: true
         github_token: ${{secrets.FIXPR_GH_TOKEN}}
         #----------polaris param---------------#
-        polaris: false
+        polaris: true
         polaris_url: ${{secrets.POLARIS_SERVER_URL}}
         polaris_token: ${{secrets.POLARIS_ACCESS_TOKEN}}
         polaris_project: ${{github.repository}}
@@ -38,7 +38,7 @@ jobs:
         polaris_issue_status: opened
         polaris_sarif: true
         #----------black duck param------------#
-        blackduck: true
+        blackduck: false
         blackduck_url: ${{secrets.BLACKDUCK_SERVER_URL}}
         blackduck_token: ${{secrets.BLACKDUCK_ACCESS_TOKEN}}
         blackduck_project: ${{github.repository}}
