@@ -34,7 +34,7 @@ jobs:
         polaris_token: ${{secrets.POLARIS_ACCESS_TOKEN}}
         polaris_project: ${{github.repository}}
         polaris_branch: ${{github.ref_name}}
-        # polaris_config_file: polaris.yml
+        polaris_config_file: polaris.yml
         polaris_issue_status: opened
         polaris_sarif: true
         #----------black duck param------------#
