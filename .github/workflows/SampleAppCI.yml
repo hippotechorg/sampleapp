@@ -29,7 +29,7 @@ jobs:
         cache: true
         github_token: ${{secrets.FIXPR_GH_TOKEN}}
         #----------polaris param---------------#
-        polaris: true
+        polaris: false
         polaris_url: ${{secrets.POLARIS_SERVER_URL}}
         polaris_token: ${{secrets.POLARIS_ACCESS_TOKEN}}
         polaris_project: ${{github.repository}}
@@ -59,7 +59,7 @@ jobs:
         coverity_sarif: true
         coverity_local: true
         #----------nextgen polaris param---------------#
-        polaris_nextgen: false
+        polaris_nextgen: true
         polaris_nextgen_url: ${{secrets.NEXTGEN_POLARIS_SERVER_URL}}
         polaris_nextgen_token: ${{secrets.NEXTGEN_POLARIS_ACCESS_TOKEN}}
         polaris_nextgen_project: ${{github.repository}}

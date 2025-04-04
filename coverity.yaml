@@ -9,7 +9,7 @@ analyze:
   checkers:
     checker-config:
       RESOURCE_LEAK:
-        enabled: false
+        enabled: true
       HARDCODED_CREDENTIALS:
         enabled: true
     all: true
