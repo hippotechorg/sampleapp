@@ -62,6 +62,7 @@ jobs:
         polaris_nextgen: true
         polaris_nextgen_url: ${{secrets.NEXTGEN_POLARIS_SERVER_URL}}
         polaris_nextgen_token: ${{secrets.NEXTGEN_POLARIS_ACCESS_TOKEN}}
+        polaris_nextgen_application: JounisApp
         polaris_nextgen_project: ${{github.repository}}
         polaris_nextgen_branch: ${{github.ref_name}}
         polaris_nextgen_sarif: true
