@@ -18,14 +18,10 @@ capture:
       - [ --xml-option=skip_file:.*/boost/*.c, --gcc ]
       - [ "--gcc", "--xml-option=skip_file:.*Test.*" ]
 
-  # files:
-  #   exclude-regex: "[^/]Test"
+  files:
+    exclude-regex: "[^/]Test"
 
 analyze:
   cov-analyze-args:
-    # - --disable-spotbugs
+    - --disable-spotbugs
     # - --disable-sigma
-  # Specifies which files to analyze when the "analyze.mode" setting is "hfi".
-  # Analysis will be performed for only these files.
-  # files:
-  #   exclude-regex: "[^/]Test"
