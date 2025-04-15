@@ -1,13 +1,8 @@
 # Coverity configuration file.
-# The schema is available here: <install-dir>/doc/configuration-schema.json
-# For help on individual settings:      coverity help config --setting <setting>
-# For a complete example configuration: coverity help config --show-all
-# For help on configuration syntax:     coverity help config --syntax
-
 capture:
-  build:
-    clean-command: mvn clean
-    build-command: mvn install -Dmaven.test.skip=true
+  # build:
+  #   clean-command: mvn clean
+  #   build-command: mvn install -Dmaven.test.skip=true
 
   compiler-configuration:
     cov-configure:
