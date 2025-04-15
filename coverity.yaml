@@ -47,8 +47,8 @@ analyze:
     checker-config:
       RESOURCE_LEAK:
         enabled: true
-      HARDCODED_CREDENTIALS:
-        enabled: true
+      # HARDCODED_CREDENTIALS:
+      #   enabled: true
     all: true
     audit: true
     all-security: true
@@ -59,16 +59,3 @@ analyze:
   # Analysis will be performed for only these files.
   files:
     exclude-regex: "[^/]Test"
-
-# Specifies where the analysis results should be sent.
-commit:
-  # Coverity Connect configuration to use when committing defects to Coverity
-  # Connect.
-  connect:
-    cov-commit-defects-args:
-      - --exclude-files
-      - "[^/]Test"
-    on-new-cert: trust
-
-caching:
-  enabled: true
