@@ -54,7 +54,7 @@ analyze:
     all-security: true
   cov-analyze-args:
     - --disable-spotbugs
-    - --disable-sigma
+    # - --disable-sigma
   # Specifies which files to analyze when the "analyze.mode" setting is "hfi".
   # Analysis will be performed for only these files.
   files:
