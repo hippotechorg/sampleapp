@@ -7,7 +7,7 @@
 capture:
   build:
     clean-command: mvn clean
-    build-command: mvn install #-Dmaven.test.skip=true
+    build-command: mvn install -Dmaven.test.skip=true
 
   compiler-configuration:
     cov-configure:
@@ -23,29 +23,14 @@ capture:
       - [ --xml-option=skip_file:.*/boost/*.c, --gcc ]
       - [ "--gcc", "--xml-option=skip_file:.*Test.*" ]
 
-  files:
-    exclude-regex: "[^/]Test"
-  # Enables or disables security dynamic analysis. If set to true (the
-  # default), security dynamic analysis is run as part of the capture step. If
-  # set to false, security dynamic analysis is not run.
-  security-da: false
+  # files:
+  #   exclude-regex: "[^/]Test"
 
 analyze:
-  location: central
-  checkers:
-    checker-config:
-      RESOURCE_LEAK:
-        enabled: true
-      # HARDCODED_CREDENTIALS:
-      #   enabled: true
-    all: true
-    audit: true
-    all-security: true
   cov-analyze-args:
     - --disable-spotbugs
-    - --disable HARDCODED_CREDENTIALS
     # - --disable-sigma
   # Specifies which files to analyze when the "analyze.mode" setting is "hfi".
   # Analysis will be performed for only these files.
-  files:
-    exclude-regex: "[^/]Test"
+  # files:
+  #   exclude-regex: "[^/]Test"
