@@ -65,9 +65,9 @@ commit:
   # Coverity Connect configuration to use when committing defects to Coverity
   # Connect.
   connect:
-    # cov-commit-defects-args:
-    #   - --exclude-files
-    #   - "[^/]Test"
+    cov-commit-defects-args:
+      - --exclude-files
+      - "[^/]Test"
     on-new-cert: trust
 
 caching:
