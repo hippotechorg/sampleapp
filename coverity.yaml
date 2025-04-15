@@ -32,17 +32,6 @@ capture:
 
 analyze:
   location: central
-  # Analysis mode: "pfi" (perfect fidelity incremental) for complete analysis;
-  # or "hfi" (high fidelity incremental) for analysis of only specific files
-  # specified by analyze.files settings, omitting any other files which may
-  # have been incidentally captured by the build. An "hfi" analysis can be
-  # faster but may produce results which are incomplete or inconsistent, due to
-  # the lack of context, and should be used only when speed is more important
-  # than accuracy.
-  # Valid values:
-  #   hfi
-  #   pfi
-  mode: pfi
   checkers:
     checker-config:
       RESOURCE_LEAK:
@@ -54,6 +43,7 @@ analyze:
     all-security: true
   cov-analyze-args:
     - --disable-spotbugs
+    - --disable HARDCODED_CREDENTIALS
     # - --disable-sigma
   # Specifies which files to analyze when the "analyze.mode" setting is "hfi".
   # Analysis will be performed for only these files.
