@@ -23,5 +23,5 @@ capture:
 
 analyze:
   cov-analyze-args:
-    - --disable-spotbugs
-    - --disable-sigma
+    # - --disable-spotbugs
+    # - --disable-sigma
