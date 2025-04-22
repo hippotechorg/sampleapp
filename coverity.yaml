@@ -1,5 +1,6 @@
 # Coverity configuration file.
 capture:
+  build-command-inference: false
   # build:
   #   clean-command: mvn clean
   #   build-command: mvn install -Dmaven.test.skip=true
