@@ -1,8 +1,8 @@
 # Coverity configuration file.
 capture:
-  build:
-    clean-command: mvn clean
-    build-command: mvn install -Dmaven.test.skip=true
+  # build:
+  #   clean-command: mvn clean
+  #   build-command: mvn install -Dmaven.test.skip=true
 
   compiler-configuration:
     cov-configure:
