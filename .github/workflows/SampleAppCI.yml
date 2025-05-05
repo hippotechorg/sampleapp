@@ -73,7 +73,6 @@ jobs:
       with:
         blackduck_url: ${{ inputs.blackduck_url }}
         blackduck_apiToken: ${{ inputs.blackduck_token }}
-        blackduck_scan_full: false
         blackduck_outputFile: ${{github.workspace}}/blackduck-snippet-sarif.json
         blackduck_changed_only: false
         github_url: ""
