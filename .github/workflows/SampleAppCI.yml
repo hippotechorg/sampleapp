@@ -59,7 +59,7 @@ jobs:
         coverity_sarif: true
         coverity_local: true
         #----------nextgen polaris param---------------#
-        polaris_nextgen: true
+        polaris_nextgen: false
         polaris_nextgen_url: ${{secrets.NEXTGEN_POLARIS_SERVER_URL}}
         polaris_nextgen_token: ${{secrets.NEXTGEN_POLARIS_ACCESS_TOKEN}}
         polaris_nextgen_application: JounisApp
@@ -68,5 +68,31 @@ jobs:
         polaris_nextgen_sarif: true
         
     #-----------AppSec Analysis END-----------------------------------#
+    - if: ${{github.event_name == 'pull_request' && github.event.action != 'closed' && github.event.pull_request.merged == false}}
+      uses: lejouni/blackduck-snippet-scanner@main
+      with:
+        blackduck_url: ${{ inputs.blackduck_url }}
+        blackduck_apiToken: ${{ inputs.blackduck_token }}
+        blackduck_scan_full: false
+        blackduck_outputFile: ${{github.workspace}}/blackduck-snippet-sarif.json
+        blackduck_changed_only: false
+        github_url: ""
+        github_apiToken: ${{secrets.FIXPR_GH_TOKEN}}
+        blackduck_log_level: ${{ inputs.log_level }}
+        github_repo: ${{github.repository}}
+        github_pull_request_id: ${{github.event.pull_request.number}}
+        github_prComment: false
+        github_prCommentGroupped: true
+    - name: Upload SARIF file
+      uses: github/codeql-action/upload-sarif@v3
+      with:
+        sarif_file: ${{github.workspace}}/blackduck-snippet-sarif.json
+      continue-on-error: true
+    - name: Archive scanning results
+      uses: actions/upload-artifact@v4
+      with:
+        name: bd-snippet-scan-results
+        path: ${{github.workspace}}/blackduck-snippet-sarif.json
+      continue-on-error: true
 
 

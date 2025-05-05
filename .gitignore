@@ -73,3 +73,6 @@ sampleapp_models.xmldb
 .blackduck
 sampleapp_security_report.pdf
 comparison_report
+bd_snippet_sarif.sarif.json
+blackduckSnippetFindings.json
+snippetResults.json
