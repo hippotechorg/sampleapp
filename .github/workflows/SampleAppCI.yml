@@ -2,11 +2,12 @@ name: Sampleapp CI with Security Scanning
 
 on:
   # push:
-  workflow_dispatch:
+  # workflow_dispatch:
   pull_request:
+    types: [opened, reopened, closed]
 
 jobs:
-  build:
+  appsectests:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3 # This will checkout the source codes from repository
@@ -20,50 +21,80 @@ jobs:
     #   run: mvn clean install -DskipTests
     #   working-directory: .
     #-----------AppSec Analysis START-----------------------------------#
-    - uses: lejouni/appsec-scan@main
-      with:
-        #----------common param----------------#
-        build_command: mvn clean install -DskipTests -Dparam=${{secrets.POLARIS_SERVER_URL}}
-        log_level: INFO
-        cache: true
-        github_token: ${{secrets.GITHUB_TOKEN}}
-        #----------polaris param---------------#
-        polaris: false
-        polaris_url: ${{secrets.POLARIS_SERVER_URL}}
-        polaris_token: ${{secrets.POLARIS_ACCESS_TOKEN}}
-        polaris_project: ${{github.repository}}
-        polaris_branch: ${{github.ref_name}}
-        # polaris_config_file: polaris.yml
-        polaris_issue_status: opened
-        polaris_sarif: true
-        #----------black duck param------------#
-        blackduck: true
-        blackduck_url: ${{secrets.BLACKDUCK_SERVER_URL}}
-        blackduck_token: ${{secrets.BLACKDUCK_ACCESS_TOKEN}}
-        blackduck_project: ${{github.repository}}
-        blackduck_version: ${{github.ref_name}}
-        blackduck_sarif: true
-        blackduck_policies: true
-        blackduck_iac: true
-        blackduck_prComment_enabled: true
-        blackduck_rapid_compare_mode: BOM_COMPARE_STRICT
-        blackduck_policy_categories: SECURITY,LICENSE
-        #----------CNC param------------#
-        cnc: false
-        cnc_url: ${{secrets.CNC_SERVER_URL}}
-        cnc_username: ${{secrets.CNC_USERNAME}}
-        cnc_passphare: ${{secrets.CNC_PASSPHARE}}
-        cnc_project: sampleapp
-        cnc_stream: ${{github.ref_name}}
-        cnc_sarif: true
-        #----------nextgen polaris param---------------#
-        polaris_nextgen: false
-        polaris_nextgen_url: ${{secrets.NEXTGEN_POLARIS_SERVER_URL}}
-        polaris_nextgen_token: ${{secrets.NEXTGEN_POLARIS_ACCESS_TOKEN}}
-        polaris_nextgen_project: ${{github.repository}}
-        polaris_nextgen_branch: ${{github.ref_name}}
-        polaris_nextgen_sarif: true
+    # - uses: lejouni/appsec-scan@main
+    #   with:
+    #     #----------common param----------------#
+    #     build_command: mvn clean install -DskipTests -Dparam=${{secrets.POLARIS_SERVER_URL}}
+    #     log_level: INFO
+    #     cache: true
+    #     github_token: ${{secrets.FIXPR_GH_TOKEN}}
+    #     #----------polaris param---------------#
+    #     polaris: false
+    #     polaris_url: ${{secrets.POLARIS_SERVER_URL}}
+    #     polaris_token: ${{secrets.POLARIS_ACCESS_TOKEN}}
+    #     polaris_project: ${{github.repository}}
+    #     polaris_branch: ${{github.ref_name}}
+    #     polaris_config_file: polaris.yml
+    #     polaris_issue_status: opened
+    #     polaris_sarif: true
+    #     #----------black duck param------------#
+    #     blackduck: false
+    #     blackduck_url: ${{secrets.BLACKDUCK_SERVER_URL}}
+    #     blackduck_token: ${{secrets.BLACKDUCK_ACCESS_TOKEN}}
+    #     blackduck_project: ${{github.repository}}
+    #     blackduck_version: ${{github.ref_name}}
+    #     blackduck_sarif: true
+    #     blackduck_policies: true
+    #     blackduck_iac: true
+    #     blackduck_prComment_enabled: false
+    #     blackduck_rapid_compare_mode: BOM_COMPARE_STRICT
+    #     blackduck_policy_categories: SECURITY,LICENSE
+    #     #----------Coverity param------------#
+    #     coverity: false
+    #     coverity_url: ${{secrets.COVERITY_SERVER_URL}}
+    #     coverity_username: ${{secrets.COVERITY_USERNAME}}
+    #     coverity_passphare: ${{secrets.COVERITY_ACCESS_TOKEN}}
+    #     coverity_project: sampleapp
+    #     coverity_stream: ${{github.ref_name}}
+    #     coverity_sarif: true
+    #     coverity_local: true
+    #     #----------nextgen polaris param---------------#
+    #     polaris_nextgen: false
+    #     polaris_nextgen_url: ${{secrets.NEXTGEN_POLARIS_SERVER_URL}}
+    #     polaris_nextgen_token: ${{secrets.NEXTGEN_POLARIS_ACCESS_TOKEN}}
+    #     polaris_nextgen_application: JounisApp
+    #     polaris_nextgen_project: ${{github.repository}}
+    #     polaris_nextgen_branch: ${{github.ref_name}}
+    #     polaris_nextgen_sarif: true
         
     #-----------AppSec Analysis END-----------------------------------#
+    - if: ${{github.event_name == 'pull_request' && github.event.action != 'closed' && github.event.pull_request.merged == false}}
+      uses: lejouni/blackduck-snippet-scanner@main
+      with:
+        blackduck_url: ${{ inputs.blackduck_url }}
+        blackduck_apiToken: ${{ inputs.blackduck_token }}
+        blackduck_scan_full: false
+        blackduck_outputFile: ${{github.workspace}}/blackduck-snippet-sarif.json
+        blackduck_changed_only: false
+        github_url: ""
+        github_apiToken: ${{secrets.FIXPR_GH_TOKEN}}
+        blackduck_log_level: ${{ inputs.log_level }}
+        github_repo: ${{github.repository}}
+        github_pull_request_id: ${{github.event.pull_request.number}}
+        github_prComment: false
+        github_prCommentGroupped: true
+    - if: ${{github.event_name == 'pull_request' && github.event.action != 'closed' && github.event.pull_request.merged == false}}
+      name: Upload SARIF file
+      uses: github/codeql-action/upload-sarif@v3
+      with:
+        sarif_file: ${{github.workspace}}/blackduck-snippet-sarif.json
+      continue-on-error: true
+    - if: ${{github.event_name == 'pull_request' && github.event.action != 'closed' && github.event.pull_request.merged == false}}
+      name: Archive scanning results
+      uses: actions/upload-artifact@v4
+      with:
+        name: bd-snippet-scan-results
+        path: ${{github.workspace}}/blackduck-snippet-sarif.json
+      continue-on-error: true
 
 
