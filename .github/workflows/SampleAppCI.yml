@@ -71,13 +71,13 @@ jobs:
     - if: ${{github.event_name == 'pull_request' && github.event.action != 'closed' && github.event.pull_request.merged == false}}
       uses: lejouni/blackduck-snippet-scanner@main
       with:
-        blackduck_url: ${{ inputs.blackduck_url }}
-        blackduck_apiToken: ${{ inputs.blackduck_token }}
+        blackduck_url: ${{secrets.BLACKDUCK_SERVER_URL}}
+        blackduck_apiToken: ${{secrets.BLACKDUCK_ACCESS_TOKEN}}
         blackduck_outputFile: ${{github.workspace}}/blackduck-snippet-sarif.json
         blackduck_changed_only: false
         github_url: ""
         github_apiToken: ${{secrets.FIXPR_GH_TOKEN}}
-        blackduck_log_level: ${{ inputs.log_level }}
+        blackduck_log_level: DEBUG
         github_repo: ${{github.repository}}
         github_pull_request_id: ${{github.event.pull_request.number}}
         github_prComment: false
