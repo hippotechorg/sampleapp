@@ -73,7 +73,7 @@ jobs:
       with:
         blackduck_url: ${{secrets.BLACKDUCK_SERVER_URL}}
         blackduck_apiToken: ${{secrets.BLACKDUCK_ACCESS_TOKEN}}
-        blackduck_outputFile: ${{github.workspace}}/blackduck-snippet-sarif.json
+        blackduck_outputFile: ${{github.workspace}}/blackduck-snippet.sarif.json
         blackduck_changed_only: false
         github_url: ""
         github_apiToken: ${{secrets.FIXPR_GH_TOKEN}}
@@ -86,14 +86,14 @@ jobs:
       name: Upload SARIF file
       uses: github/codeql-action/upload-sarif@v3
       with:
-        sarif_file: ${{github.workspace}}/blackduck-snippet-sarif.json
+        sarif_file: ${{github.workspace}}/blackduck-snippet.sarif.json
       continue-on-error: true
     - if: ${{github.event_name == 'pull_request' && github.event.action != 'closed' && github.event.pull_request.merged == false}}
       name: Archive scanning results
       uses: actions/upload-artifact@v4
       with:
         name: bd-snippet-scan-results
-        path: ${{github.workspace}}/blackduck-snippet-sarif.json
+        path: ${{github.workspace}}/blackduck-snippet.sarif.json
       continue-on-error: true
 
 
