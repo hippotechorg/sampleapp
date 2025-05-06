@@ -74,7 +74,7 @@ jobs:
         blackduck_url: ${{secrets.BLACKDUCK_SERVER_URL}}
         blackduck_apiToken: ${{secrets.BLACKDUCK_ACCESS_TOKEN}}
         blackduck_outputFile: ${{github.workspace}}/blackduck-snippet.sarif.json
-        blackduck_changed_only: false
+        blackduck_changed_only: true
         github_url: ""
         github_apiToken: ${{secrets.FIXPR_GH_TOKEN}}
         blackduck_log_level: DEBUG
