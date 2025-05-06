@@ -8,12 +8,6 @@ jobs:
   appsectests:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-      with:
-        ref: ${{ github.event.pull_request.head.sha }}
-    - run: |
-        ls -la
-      shell: bash
     - uses: lejouni/blackduck-snippet-scanner@main
       with:
         blackduck_url: ${{secrets.BLACKDUCK_SERVER_URL}}
