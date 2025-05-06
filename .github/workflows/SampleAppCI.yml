@@ -10,7 +10,7 @@ jobs:
   appsectests:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3 # This will checkout the source codes from repository
+    - uses: actions/checkout@v4 # This will checkout the source codes from repository
     # - name: Set up JDK 1.11 # This will add Java into the runners PATH
     #   uses: actions/setup-java@v3.6.0
     #   with:
