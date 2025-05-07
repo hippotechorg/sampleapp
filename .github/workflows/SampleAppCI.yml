@@ -1,7 +1,7 @@
 name: Sampleapp CI with Security Scanning
 
 on:
-  # push:
+  push:
   workflow_dispatch:
   # pull_request:
   #   types: [opened, reopened, closed]
@@ -38,7 +38,7 @@ jobs:
         polaris_issue_status: opened
         polaris_sarif: true
         #----------black duck param------------#
-        blackduck: false
+        blackduck: true
         blackduck_url: ${{secrets.BLACKDUCK_SERVER_URL}}
         blackduck_token: ${{secrets.BLACKDUCK_ACCESS_TOKEN}}
         blackduck_project: ${{github.repository}}
