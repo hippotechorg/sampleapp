@@ -80,3 +80,4 @@ comparison_report.json
 cov-findings-report.log
 JounisTest_v10_output.json
 my_findings_report_output.xlsx
+feature2.sarif.json
