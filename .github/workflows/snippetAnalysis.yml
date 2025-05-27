@@ -8,7 +8,7 @@ jobs:
   appsectests:
     runs-on: ubuntu-latest
     steps:
-    - uses: lejouni/blackduck-snippet-scanner@main
+    - uses: synopsys-sig-community/blackduck-snippet-scanner@main
       with:
         blackduck_url: ${{secrets.BLACKDUCK_SERVER_URL}}
         blackduck_apiToken: ${{secrets.BLACKDUCK_ACCESS_TOKEN}}
