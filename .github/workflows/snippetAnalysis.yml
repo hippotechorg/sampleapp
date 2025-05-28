@@ -2,8 +2,7 @@ name: Pull Request snippet analysis
 
 on:
   pull_request:
-    types: [opened, reopened]
-
+    branches: [ "main" ]
 jobs:
   snippet_tests:
     runs-on: ubuntu-latest

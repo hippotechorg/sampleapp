@@ -1,7 +1,7 @@
 name: Sampleapp CI with Security Scanning
 
 on:
-  push:
+  # push:
   workflow_dispatch:
   # pull_request:
   #   types: [opened, reopened, closed]
