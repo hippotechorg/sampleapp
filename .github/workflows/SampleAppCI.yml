@@ -68,3 +68,6 @@ jobs:
         polaris_nextgen_sarif: true
         
     #-----------AppSec Analysis END-----------------------------------#
+    steps:
+    - name: Adding markdown
+      run: echo ‘### Hello world! :rocket:’ >> $GITHUB_STEP_SUMMARY
