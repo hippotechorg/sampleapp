@@ -1,7 +1,7 @@
 package com.example;
 
 import java.io.InputStream;
-
+//Utils for managing InputStream
 public class Utils {
     
 public static InputStream getResourceStream(String key, ClassLoader loader) {
