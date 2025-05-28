@@ -69,4 +69,4 @@ jobs:
         
     #-----------AppSec Analysis END-----------------------------------#
     - name: Adding markdown
-      run: echo ‘### Hello world! :rocket:’ >> $GITHUB_STEP_SUMMARY
+      run: echo '### Hello world! :rocket:' >> $GITHUB_STEP_SUMMARY
