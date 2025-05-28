@@ -1,4 +1,4 @@
-name: Sampleapp CI with Security Scanning
+name: SampleAppCI
 
 on:
   # push:
