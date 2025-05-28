@@ -15,7 +15,7 @@ jobs:
         blackduck_outputFile: ${{github.workspace}}/blackduck-snippet.sarif.json
         blackduck_log_level: DEBUG
         github_url: ""
-        github_apiToken: ${{secrets.FIXPR_GH_TOKEN}}
+        github_apiToken: ${{secrets.GITHUB_TOKEN}}
         github_repo: ${{github.repository}}
         github_pull_request_id: ${{github.event.pull_request.number}}
         github_prComment: false
