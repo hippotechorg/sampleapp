@@ -108,7 +108,11 @@
 		    <artifactId>itextpdf</artifactId>
 		    <version>5.5.8</version>
 		</dependency>
-
+		<dependency>
+			<groupId>org.apache.tomcat.embed</groupId>
+			<artifactId>tomcat-embed-core</artifactId>
+			<version>10.1.0-M2</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>

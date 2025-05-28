@@ -53,8 +53,10 @@ analyze:
     audit: true
     all-security: true
   cov-analyze-args:
-    - --disable-spotbugs
-    - --disable-sigma
+    - --disable-spotbugs 
+    - --disable 
+    - SIGMA.hardcoded_secret
+    # - --disable-sigma
   # Specifies which files to analyze when the "analyze.mode" setting is "hfi".
   # Analysis will be performed for only these files.
   files:
@@ -77,13 +79,13 @@ commit:
       reference: latest
 
     # Absolute URL of where to commit the Coverity Connect results.
-    url: https://demo.coverity.synopsys.com:443
+    url: https://coverity.field-test.blackduck.com:443
 
     comparison-only: true
   local:
-    format: html # options: html/json
+    format: json # options: html/json
     # path must be file when format is json. 
     # example: comparison_report.json and folder when format is html.
-    path: comparison_report 
+    path: comparison_report.json 
 caching:
   enabled: false

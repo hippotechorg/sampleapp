@@ -76,3 +76,8 @@ comparison_report
 bd_snippet_sarif.sarif.json
 blackduckSnippetFindings.json
 snippetResults.json
+comparison_report.json
+cov-findings-report.log
+JounisTest_v10_output.json
+my_findings_report_output.xlsx
+feature2.sarif.json
