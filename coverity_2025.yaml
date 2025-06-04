@@ -79,13 +79,14 @@ commit:
       reference: latest
 
     # Absolute URL of where to commit the Coverity Connect results.
-    url: https://coverity.field-test.blackduck.com:443
+    # url: https://coverity.field-test.blackduck.com:443
+    url: https://bd-60989:8443
 
-    comparison-only: true
-  local:
-    format: json # options: html/json
-    # path must be file when format is json. 
-    # example: comparison_report.json and folder when format is html.
-    path: comparison_report.json 
+    # comparison-only: true
+  # local:
+  #   format: json # options: html/json
+  #   # path must be file when format is json. 
+  #   # example: comparison_report.json and folder when format is html.
+  #   path: comparison_report.json 
 caching:
   enabled: false
