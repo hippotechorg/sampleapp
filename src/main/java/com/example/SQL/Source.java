@@ -14,6 +14,7 @@ public class Source {
 		if (StringUtils.isBlank(req.getParameter("sql_usernames")) || req.getParameter("sql_usernames").startsWith("Test")){
 			final List<String> usernames = SQLInjection.getUserNames(req.getParameter("sql_usernames"));
 			for (final String username : usernames) {
+				//Lets print out what we got
 				System.out.println("We got username from request: " + username);
 			}
 		}
