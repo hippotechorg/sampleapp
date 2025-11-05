@@ -19,13 +19,13 @@ public class SQLInjection {
 		List<String> usernameList = null;
 		try {
 			conn = DriverManager.getConnection("", "", "");
-			String sql = "SELECT username FROM User WHERE id ='" + sqlForUsernames + "'";
+			//String sql = "SELECT username FROM User WHERE id ='" + sqlForUsernames + "'";
 			Statement statement = conn.createStatement();
 			final ResultSet rset = statement.executeQuery(sql);
-			// String sql = "SELECT username FROM User WHERE  id = ?";
-			// PreparedStatement pstatement = conn.prepareStatement(sql);
-			// pstatement.setString(1, sqlForUsernames);
-			// final ResultSet rset = pstatement.executeQuery();
+			String sql = "SELECT username FROM User WHERE  id = ?";
+			PreparedStatement pstatement = conn.prepareStatement(sql);
+			pstatement.setString(1, sqlForUsernames);
+			final ResultSet rset = pstatement.executeQuery();
 			if (rset != null) {
 				usernameList = new ArrayList<String>();
 				while (rset.next()) {
