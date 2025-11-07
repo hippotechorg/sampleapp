@@ -1,28 +1,6 @@
-# Coverity configuration file.
 capture:
-  build-command-inference: false
-  # build:
-  #   clean-command: mvn clean
-  #   build-command: mvn install -Dmaven.test.skip=true
-
-  compiler-configuration:
-    cov-configure:
-      - [ --java ]
-      - [ --python ]
-      - [ --javascript ]
-      - [ --template, --compiler, ccarm, --comptype, green_hills ]
-      - [ --template, --compiler, ccintppc, --comptype, green_hills ]
-      - [ --template, --compiler, ecomppc, --comptype, green_hills_ecom ]
-      - [ --template, --compiler, icc430, --comptype, iar ]
-      - [ "--comptype" ,"gcc" , "--compiler" , "i586-poky-linux-gcc", "--template" ]
-      - [ "--comptype" ,"g++" , "--compiler" , "i586-poky-linux-g++", "--template" ]
-      - [ --xml-option=skip_file:.*/boost/*.c, --gcc ]
-      - [ "--gcc", "--xml-option=skip_file:.*Test.*" ]
-
-  files:
-    exclude-regex: "[^/]Test"
-
+  build:
+    clean-command: mvn -B -f pom.xml clean
+    build-command: mvn -B -f pom.xml install
 analyze:
-  cov-analyze-args:
-    # - --disable-spotbugs
-    # - --disable-sigma
+  cov-analyze-args: []
