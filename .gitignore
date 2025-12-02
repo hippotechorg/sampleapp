@@ -84,3 +84,7 @@ feature2.sarif.json
 coverity_local.yaml
 testi.json
 testi2.json
+.bridge/
+detect/detect-10.7.0.jar
+detect/detect-11.0.0.jar
+.github/workflows/nabil.yml
