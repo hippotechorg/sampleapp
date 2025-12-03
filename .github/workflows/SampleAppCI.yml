@@ -50,7 +50,7 @@ jobs:
         blackduck_rapid_compare_mode: BOM_COMPARE_STRICT
         blackduck_policy_categories: SECURITY,LICENSE
         #----------Coverity param------------#
-        coverity: true
+        coverity: false
         coverity_url: ${{secrets.COVERITY_SERVER_URL}}
         coverity_username: ${{secrets.COVERITY_USERNAME}}
         coverity_passphare: ${{secrets.COVERITY_ACCESS_TOKEN}}
@@ -59,7 +59,7 @@ jobs:
         coverity_sarif: true
         coverity_local: true
         #----------nextgen polaris param---------------#
-        polaris_nextgen: false
+        polaris_nextgen: true
         polaris_nextgen_url: ${{secrets.NEXTGEN_POLARIS_SERVER_URL}}
         polaris_nextgen_token: ${{secrets.NEXTGEN_POLARIS_ACCESS_TOKEN}}
         polaris_nextgen_project: ${{github.repository}}
