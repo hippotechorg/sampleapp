@@ -7,7 +7,7 @@ jobs:
   snippet_tests:
     runs-on: ubuntu-latest
     steps:
-    - uses: blackduck-community/blackduck-snippet-scanner@main
+    - uses: lejouni/blackduck-snippet-scanner@main
       with:
         blackduck_url: ${{secrets.BLACKDUCK_SERVER_URL}}
         blackduck_apiToken: ${{secrets.BLACKDUCK_ACCESS_TOKEN}}
