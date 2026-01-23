@@ -1,7 +1,7 @@
-name: Sampleapp CI with Security Scanning
+name: SampleAppCI
 
 on:
-  # push:
+  push:
   workflow_dispatch:
   # pull_request:
   #   types: [opened, reopened, closed]
@@ -60,11 +60,12 @@ jobs:
         coverity_local: true
         #----------nextgen polaris param---------------#
         polaris_nextgen: false
-        polaris_nextgen_url: ${{secrets.NEXTGEN_POLARIS_SERVER_URL}}
-        polaris_nextgen_token: ${{secrets.NEXTGEN_POLARIS_ACCESS_TOKEN}}
-        polaris_nextgen_application: JounisApp
+        polaris_nextgen_url: ${{secrets.POLARIS_SERVER_URL}}
+        polaris_nextgen_token: ${{secrets.POLARIS_ACCESS_TOKEN}}
         polaris_nextgen_project: ${{github.repository}}
         polaris_nextgen_branch: ${{github.ref_name}}
         polaris_nextgen_sarif: true
         
     #-----------AppSec Analysis END-----------------------------------#
+    - name: Adding markdown
+      run: echo '### Jouni Test for Summary :rocket:' >> $GITHUB_STEP_SUMMARY
