@@ -1,0 +1,63 @@
+name: Security Scanning
+ 
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
+#   schedule:
+#     # Run daily at 2 AM UTC
+#     - cron: '0 2 * * *'
+  workflow_dispatch:
+ 
+permissions:
+  contents: read
+  security-events: write
+  # pull-requests: write # this is needed only if PR comments are enabled
+ 
+jobs:
+  blackduck-scan:
+    name: BlackDuck Software Composition Analysis
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+ 
+      - name: Run BlackDuck scan
+        uses: blackduck-inc/black-duck-security-scan@v2
+        env:
+          DETECT_PROJECT_NAME: jl_sample_${{ github.event.repository.name }}
+          DETECT_PROJECT_VERSION_NAME: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.ref || github.ref_name || github.sha }}
+ 
+        with:
+          ### SCANNING: Required fields
+          blackducksca_url: ${{ vars.BLACKDUCK_URL }}
+          blackducksca_token: ${{ secrets.BLACKDUCK_TOKEN }}
+          blackducksca_scan_full: true
+ 
+          ### SCANNING: Optional fields
+          blackducksca_scan_failure_severities: 'BLOCKER,CRITICAL'
+ 
+          ### PULL REQUEST COMMENTS
+          # blackducksca_prcomment_enabled: true
+ 
+          ### FIX PULL REQUEST CREATION
+          # blackducksca_fixpr_enabled: true
+ 
+          # Required when PR comments, Fix PR or Sarif Upload is enabled
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+ 
+          ### SARIF report generation
+          blackducksca_reports_sarif_create: false
+          # blackducksca_reports_sarif_file_path: 'report_bd.sarif'
+          blackducksca_upload_sarif_report: false
+ 
+          ## OPTIONAL DIAGNOSTICS: Upload logs as build artifact if true
+          include_diagnostics: false
+ 
