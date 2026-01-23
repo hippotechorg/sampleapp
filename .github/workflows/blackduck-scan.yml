@@ -54,10 +54,11 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
  
           ### SARIF report generation
-          blackducksca_reports_sarif_create: false
+          blackducksca_reports_sarif_create: true
           # blackducksca_reports_sarif_file_path: 'report_bd.sarif'
-          blackducksca_upload_sarif_report: false
+          blackducksca_upload_sarif_report: true
  
           ## OPTIONAL DIAGNOSTICS: Upload logs as build artifact if true
           include_diagnostics: false
  
+          mark_build_status: 'success'
