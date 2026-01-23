@@ -25,7 +25,6 @@ component_vulnerabilities.json
 full_result.sarif.json
 seekerResponse.sarif.json
 seekerResults.json
-<<<<<<< HEAD
 node_modules
 component.json
 coverity_auth_key.json
@@ -35,38 +34,13 @@ policies.json
 rocky_8_sbom_spdx.json
 rocky_9_sbom_spdx.json
 rocky_linux_8_sbom_docker.txt
-=======
-coverity_auth_key.json
-component.json
-GH_Maersk-Global_vessel-assurance.sarif.json
-lejouni_sampleapp.sarif.json
-policies.json
-sampleapp_full_result.sarif.json
-appsec-sigma-2022.9.1.tar
-hippotech-approval.tar
-hippotech-blog.tar
-openssh-2.9p2.tar.gz
-rocky_8_sbom_spdx.json
-rocky_9_sbom_spdx.json
-rocky_linux_8_sbom_docker.txt
-rocky_linux_8.tar
-rocky_linux_9.tar
->>>>>>> 92a65020dc4611d11e220fe284531526d7d3b867
 rocky_linux_sbom_docker_spdx.json
 rocky_linux_sbom_docker.json
 rocky_linux_sbom_docker.txt
 rocky_linux_sbom_spdx.json
 sampleapp_bd_rapid.sarif.json
 sampleapp_rapid_component_results.json
-<<<<<<< HEAD
 sampleapp_full_result.sarif.json
-=======
-detect/synopsys-detect-9.2.0.jar
-detect/synopsys-detect-9.3.0.jar
-redis-latest.tar
-detect/synopsys-detect-9.9.0.jar
-node_modules
->>>>>>> 92a65020dc4611d11e220fe284531526d7d3b867
 coverity_results.json
 detect/synopsys-detect-9.10.1.jar
 sampleapp_models.xmldb

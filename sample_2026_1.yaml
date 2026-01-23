@@ -5,8 +5,10 @@
 # For help on configuration syntax:     coverity help config --syntax
 
 capture:
+  # If you want to disable build command inference and forece to run only filecapture
+  # build-command-inference: false
   build:
-    build-command: mvn install -Dmaven.test.skip=true
+    build-command: mvn install #-Dmaven.test.skip=true
     clean-command: mvn clean
 
   compiler-configuration:
@@ -24,24 +26,22 @@ capture:
       - [ "--gcc", "--xml-option=skip_file:.*Test.*" ]
 
   files:
-    exclude-regex: "[^/]Test"
-  # Enables or disables security dynamic analysis. If set to true (the
-  # default), security dynamic analysis is run as part of the capture step. If
-  # set to false, security dynamic analysis is not run.
-  security-da: false
+    exclude-regex: "test|Test|report|doc|vendor|result|Result|third_party|third-party"
+
+# Specifies where the analysis results should be sent.
 
 analyze:
   location: local
-  # Analysis mode: "pfi" (perfect fidelity incremental) for complete analysis;
-  # or "hfi" (high fidelity incremental) for analysis of only specific files
-  # specified by analyze.files settings, omitting any other files which may
-  # have been incidentally captured by the build. An "hfi" analysis can be
-  # faster but may produce results which are incomplete or inconsistent, due to
-  # the lack of context, and should be used only when speed is more important
-  # than accuracy.
-  # Valid values:
-  #   hfi
-  #   pfi
+#   # Analysis mode: "pfi" (perfect fidelity incremental) for complete analysis;
+#   # or "hfi" (high fidelity incremental) for analysis of only specific files
+#   # specified by analyze.files settings, omitting any other files which may
+#   # have been incidentally captured by the build. An "hfi" analysis can be
+#   # faster but may produce results which are incomplete or inconsistent, due to
+#   # the lack of context, and should be used only when speed is more important
+#   # than accuracy.
+#   # Valid values:
+#   #   hfi
+#   #   pfi
   mode: pfi
   checkers:
     checker-config:
@@ -54,38 +54,28 @@ analyze:
     all-security: true
   cov-analyze-args:
     - --disable-spotbugs 
-    - --disable 
-    - SIGMA.hardcoded_secret
-    # - --disable-sigma
+    - --disable-sigma
   # Specifies which files to analyze when the "analyze.mode" setting is "hfi".
   # Analysis will be performed for only these files.
   files:
-    exclude-regex: "[^/]Test"
+    exclude-regex: "example|test|Test|report|doc|vendor|result|Result|third_party|third-party"
 
-# Specifies where the analysis results should be sent.
 commit:
+
   # Coverity Connect configuration to use when committing defects to Coverity
   # Connect.
   connect:
+
     cov-commit-defects-args:
       - --exclude-files
-      - "[^/]Test"
+      - "example|test|Test|report|doc|vendor|result|Result|third_party|third-party"
     on-new-cert: trust
-
-    # The name of the stream to commit the results to.
-    stream: sampleapp-feature
 
     snapshot:
       reference: latest
 
+    # The name of the stream to commit the results to.
+    stream: sample_2026
+
     # Absolute URL of where to commit the Coverity Connect results.
     url: https://coverity.field-test.blackduck.com:443
-
-    # comparison-only: true
-  # local:
-  #   format: json # options: html/json
-  #   # path must be file when format is json. 
-  #   # example: comparison_report.json and folder when format is html.
-  #   path: comparison_report.json 
-caching:
-  enabled: false

@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.TreeMap;
 import javax.net.ssl.SSLServerSocketFactory;
 //Comment
-public class Ciphers
+public class SampleCiphers
 {
     public static void main(String[] args)
         throws Exception
