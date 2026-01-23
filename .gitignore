@@ -76,3 +76,11 @@ comparison_report
 bd_snippet_sarif.sarif.json
 blackduckSnippetFindings.json
 snippetResults.json
+.bridge
+dir_buildless*
+JounisTest_v10_output.json
+my_findings_report_output.xlsx
+testi.json
+testi2.json
+dir_java*
+cov-findings-report.log
