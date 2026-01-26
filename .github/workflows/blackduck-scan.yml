@@ -34,7 +34,12 @@ jobs:
         env:
           DETECT_PROJECT_NAME: jl_sample_${{ github.event.repository.name }}
           DETECT_PROJECT_VERSION_NAME: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.ref || github.ref_name || github.sha }}
- 
+          DETECT_TOOLS: "ALL,IAC_SCAN" #All is not activating IaC scan, it needs to be activate separately with IAC_SCAN
+          DETECT_BLACKDUCK_SIGNATURE_SCANNER_COPYRIGHT_SEARCH: "true"
+          DETECT_BLACKDUCK_SIGNATURE_SCANNER_LICENSE_SEARCH: "true"
+          DETECT_BLACKDUCK_SIGNATURE_SCANNER_SNIPPET_MATCHING: SNIPPET_MATCHING
+          DETECT_BLACKDUCK_SIGNATURE_SCANNER_UPLOAD_SOURCE_MODE: "true"
+
         with:
           ### SCANNING: Required fields
           blackducksca_url: ${{ secrets.BLACKDUCK_SERVER_URL }}
