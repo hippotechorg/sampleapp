@@ -34,12 +34,20 @@ jobs:
         env:
           DETECT_PROJECT_NAME: jl_sample_${{ github.event.repository.name }}
           DETECT_PROJECT_VERSION_NAME: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.ref || github.ref_name || github.sha }}
+          DETECT_CODE_LOCATION_NAME: jl_sample_${{ github.event.repository.name }}_${{ github.event_name == 'pull_request' && github.event.pull_request.base.ref || github.ref_name || github.sha }}
+          DETECT_CLEANUP: "false" # This needs to be set, because of RAPID scan results
+          DETECT_TIMEOUT: "7200"
+          DETECT_DETECTOR_SEARCH_DEPTH: "20"
+          DETECT_DETECTOR_SEARCH_CONTINUE: "true"
+          DETECT_EXCLUDED_DIRECTORIES_SEARCH_DEPTH: "20"
+          DETECT_EXCLUDED_DIRECTORIES: node_modules,detect,.bridge
+          DETECT_PUB_DEPENDENCY_TYPES_EXCLUDE: DEV
+          DETECT_NPM_DEPENDENCY_TYPES_EXCLUDED: DEV
           DETECT_TOOLS: "ALL,IAC_SCAN" #All is not activating IaC scan, it needs to be activate separately with IAC_SCAN
           DETECT_BLACKDUCK_SIGNATURE_SCANNER_COPYRIGHT_SEARCH: "true"
           DETECT_BLACKDUCK_SIGNATURE_SCANNER_LICENSE_SEARCH: "true"
           DETECT_BLACKDUCK_SIGNATURE_SCANNER_SNIPPET_MATCHING: SNIPPET_MATCHING
           DETECT_BLACKDUCK_SIGNATURE_SCANNER_UPLOAD_SOURCE_MODE: "true"
-
         with:
           ### SCANNING: Required fields
           blackducksca_url: ${{ secrets.BLACKDUCK_SERVER_URL }}
