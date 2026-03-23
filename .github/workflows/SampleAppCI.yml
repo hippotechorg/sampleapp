@@ -38,7 +38,7 @@ jobs:
         polaris_issue_status: opened
         polaris_sarif: true
         #----------black duck param------------#
-        blackduck: true
+        blackduck: false
         blackduck_url: ${{secrets.BLACKDUCK_SERVER_URL}}
         blackduck_token: ${{secrets.BLACKDUCK_ACCESS_TOKEN}}
         blackduck_project: ${{github.repository}}
@@ -59,7 +59,7 @@ jobs:
         coverity_sarif: true
         coverity_local: true
         #----------nextgen polaris param---------------#
-        polaris_nextgen: false
+        polaris_nextgen: true
         polaris_nextgen_url: ${{secrets.POLARIS_SERVER_URL}}
         polaris_nextgen_token: ${{secrets.POLARIS_ACCESS_TOKEN}}
         polaris_nextgen_project: ${{github.repository}}
