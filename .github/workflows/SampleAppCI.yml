@@ -58,6 +58,8 @@ jobs:
           --detect.custom.fields.version[2].value=${{github.repository_id}}
           --detect.custom.fields.version[3].label=RepositoryUrl
           --detect.custom.fields.version[3].value=${{github.server_url}}/${{github.repository}} 
+          --detect.custom.fields.version[4].label=RepositoryOwner
+          --detect.custom.fields.version[4].value=${{github.repository_owner}} 
         #----------Coverity param------------#
         coverity: false
         coverity_url: ${{secrets.COVERITY_SERVER_URL}}
