@@ -38,7 +38,7 @@ jobs:
         polaris_issue_status: opened
         polaris_sarif: true
         #----------black duck param------------#
-        blackduck: false
+        blackduck: true
         blackduck_url: ${{secrets.BLACKDUCK_SERVER_URL}}
         blackduck_token: ${{secrets.BLACKDUCK_ACCESS_TOKEN}}
         blackduck_project: ${{github.repository}}
@@ -49,6 +49,15 @@ jobs:
         blackduck_prComment_enabled: false
         blackduck_rapid_compare_mode: BOM_COMPARE_STRICT
         blackduck_policy_categories: SECURITY,LICENSE,COMPONENT
+        blackduck_detect_args: >-
+          --detect.custom.fields.version[0].label=RepositorySourceSystem
+          --detect.custom.fields.version[0].value=GitHub
+          --detect.custom.fields.version[1].label=RepositoryName
+          --detect.custom.fields.version[1].value=${{github.repository}}
+          --detect.custom.fields.version[2].label=RepositoryId
+          --detect.custom.fields.version[2].value=${{github.repository_id}}
+          --detect.custom.fields.version[3].label=RepositoryUrl
+          --detect.custom.fields.version[3].value=${{github.server_url}}/${{github.repository}} 
         #----------Coverity param------------#
         coverity: false
         coverity_url: ${{secrets.COVERITY_SERVER_URL}}
@@ -59,7 +68,7 @@ jobs:
         coverity_sarif: true
         coverity_local: true
         #----------nextgen polaris param---------------#
-        polaris_nextgen: true
+        polaris_nextgen: false
         polaris_nextgen_url: ${{secrets.POLARIS_SERVER_URL}}
         polaris_nextgen_token: ${{secrets.POLARIS_ACCESS_TOKEN}}
         polaris_nextgen_project: ${{github.repository}}
